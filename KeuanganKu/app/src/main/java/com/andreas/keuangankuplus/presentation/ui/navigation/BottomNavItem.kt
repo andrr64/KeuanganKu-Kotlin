@@ -1,4 +1,4 @@
-package com.andreas.keuangankuplus.ui.navigation
+package com.andreas.keuangankuplus.presentation.ui.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home

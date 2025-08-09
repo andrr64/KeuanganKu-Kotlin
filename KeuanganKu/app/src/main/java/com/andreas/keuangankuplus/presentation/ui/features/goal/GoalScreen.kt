@@ -1,4 +1,4 @@
-package com.andreas.keuangankuplus.ui.features.goal
+package com.andreas.keuangankuplus.presentation.ui.features.goal
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.andreas.keuangankuplus.domain.model.GoalModel
-import com.andreas.keuangankuplus.ui.component.GoalItem
+import com.andreas.keuangankuplus.presentation.ui.component.GoalItem
 
 @Composable
 fun GoalScreen(
@@ -50,13 +50,13 @@ fun GoalScreen(
     val filteredGoals = goals
         .filter {
             when (filterTercapai) {
-                "true" -> it.tercapai
-                "false" -> !it.tercapai
+                "true" -> it.achieved
+                "false" -> !it.achieved
                 else -> true
             }
         }
         .filter {
-            it.nama.contains(searchKeyword, ignoreCase = true)
+            it.name.contains(searchKeyword, ignoreCase = true)
         }
         .let { list ->
             if (filterJumlah != "all") {

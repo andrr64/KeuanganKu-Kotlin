@@ -1,4 +1,4 @@
-package com.andreas.keuangankuplus.ui.component
+package com.andreas.keuangankuplus.presentation.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -12,7 +12,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.andreas.keuangankuplus.domain.model.GoalModel
-import kotlin.math.min
 
 @Composable
 fun GoalItem(
@@ -20,7 +19,7 @@ fun GoalItem(
     isDarkTheme: Boolean,
     ketikaChecklist: (Boolean) -> Unit
 ) {
-    val progressColor = if (goal.tercapai) Color.Green else Color.Red
+    val progressColor = if (goal.achieved) Color.Green else Color.Red
 
     Column(
         modifier = Modifier
@@ -45,7 +44,7 @@ fun GoalItem(
 
                 // Judul goal
                 Text(
-                    text = goal.nama,
+                    text = goal.name,
                     fontWeight = FontWeight.SemiBold,
                     color = if (isDarkTheme) Color.White else Color.Black,
                     maxLines = 1,
@@ -56,13 +55,13 @@ fun GoalItem(
             // Status + checklist
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = if (goal.tercapai) "Tercapai" else "Belum",
+                    text = if (goal.achieved) "Tercapai" else "Belum",
                     color = progressColor,
                     style = MaterialTheme.typography.bodySmall
                 )
                 Spacer(Modifier.width(8.dp))
                 Checkbox(
-                    checked = goal.tercapai,
+                    checked = goal.achieved,
                     onCheckedChange = ketikaChecklist
                 )
             }
@@ -72,7 +71,7 @@ fun GoalItem(
 
         // Baris 2: Nominal
         Text(
-            "Rp ${goal.terkumpul} / Rp ${goal.target}",
+            "Rp ${goal.collected} / Rp ${goal.target}",
             style = MaterialTheme.typography.bodySmall,
             color = if (isDarkTheme) Color.Gray else Color.DarkGray
         )

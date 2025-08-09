@@ -1,4 +1,4 @@
-package com.andreas.keuangankuplus.ui // Sesuaikan dengan package-mu
+package com.andreas.keuangankuplus.presentation.ui // Sesuaikan dengan package-mu
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
@@ -19,10 +19,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.andreas.keuangankuplus.ui.features.goal.GoalScreen
-import com.andreas.keuangankuplus.ui.features.home.HomeScreen
-import com.andreas.keuangankuplus.ui.navigation.BottomNavItem
-import com.andreas.keuangankuplus.ui.theme.KeuanganKuTheme
+import com.andreas.keuangankuplus.presentation.ui.features.goal.GoalScreen
+import com.andreas.keuangankuplus.presentation.ui.features.home.HomeScreen
+import com.andreas.keuangankuplus.presentation.ui.navigation.BottomNavItem
+import com.andreas.keuangankuplus.presentation.ui.theme.KeuanganKuTheme
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController

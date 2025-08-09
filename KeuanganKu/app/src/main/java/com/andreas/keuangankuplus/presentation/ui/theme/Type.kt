@@ -1,4 +1,4 @@
-package com.andreas.keuangankuplus.ui.theme
+package com.andreas.keuangankuplus.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

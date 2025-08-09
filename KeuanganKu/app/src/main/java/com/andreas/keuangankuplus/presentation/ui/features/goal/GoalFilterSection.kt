@@ -1,4 +1,4 @@
-package com.andreas.keuangankuplus.ui.features.goal
+package com.andreas.keuangankuplus.presentation.ui.features.goal
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
