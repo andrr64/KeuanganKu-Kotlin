@@ -40,6 +40,10 @@ android {
 }
 
 dependencies {
+    val room_version = "2.7.2"
+
+    implementation("androidx.room:room-runtime:$room_version")
+
     implementation("com.google.accompanist:accompanist-navigation-animation:0.32.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -51,6 +55,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.material3)
+    implementation(libs.androidx.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
