@@ -19,7 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.andreas.keuangankuplus.ui.features.goal.GoalScreenF
+import com.andreas.keuangankuplus.ui.features.goal.GoalScreen
 import com.andreas.keuangankuplus.ui.features.home.HomeScreen
 import com.andreas.keuangankuplus.ui.navigation.BottomNavItem
 import com.andreas.keuangankuplus.ui.theme.KeuanganKuTheme
@@ -121,7 +121,7 @@ fun NavigationGraph(
             popEnterTransition = { slideInHorizontally(initialOffsetX = { -1000 }, animationSpec = tween(300)) },
             popExitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(300)) }
         ) {
-            GoalScreenF(
+            GoalScreen(
                 isDarkTheme = isDarkTheme,
                 onThemeChange = onThemeChange
             )

@@ -1,28 +1,38 @@
 package com.andreas.keuangankuplus.ui.features.goal
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.andreas.keuangankuplus.domain.model.GoalModel
 import com.andreas.keuangankuplus.ui.component.GoalItem
-import kotlin.math.min
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GoalScreen(
     isDarkTheme: Boolean,
     onThemeChange: () -> Unit
-) {
+){
     var goals by remember {
         mutableStateOf(
             listOf(
@@ -55,50 +65,43 @@ fun GoalScreen(
             } else list
         }
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(horizontal = 16.dp)
+            .background(if (!isDarkTheme) Color.White else MaterialTheme.colorScheme.background),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Header
-        Text(
-            text = "Daftar Goal",
-            fontWeight = FontWeight.SemiBold,
-            style = MaterialTheme.typography.titleLarge,
-            color = if (isDarkTheme) Color.White else Color.Black
-        )
-        Text(
-            text = "Daftar tujuan keuangan yang sedang atau telah dicapai",
-            style = MaterialTheme.typography.bodySmall,
-            color = if (isDarkTheme) Color.Gray else Color.DarkGray
-        )
+        item {
+            Text(
+                text = "Goal",
+                fontWeight = FontWeight.SemiBold,
+                style = MaterialTheme.typography.titleLarge,
+                color = if (isDarkTheme) Color.White else Color.Black
+            )
+            Spacer(Modifier.height(4.dp))
+            Text(
+                text = "Daftar tujuan keuangan yang sedang atau telah dicapai.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = if (isDarkTheme) Color.Gray else Color.DarkGray
+            )
+            Spacer(Modifier.height(16.dp))
+            GoalFilterSection(
+                filterTercapai = filterTercapai,
+                onFilterTercapaiChange = { filterTercapai = it },
+                filterJumlah = filterJumlah,
+                onFilterJumlahChange = { filterJumlah = it }
+            )
+            Spacer(Modifier.height(16.dp))
+            GoalSearchBar(
+                value = searchKeyword,
+                onValueChange = { searchKeyword = it }
+            )
+            Spacer(Modifier.height(16.dp))
+        }
 
-        Spacer(Modifier.height(16.dp))
-
-        // ===== Filter Modern =====
-        GoalFilterSection(
-            filterTercapai = filterTercapai,
-            onFilterTercapaiChange = { filterTercapai = it },
-            filterJumlah = filterJumlah,
-            onFilterJumlahChange = { filterJumlah = it }
-        )
-
-        Spacer(Modifier.height(12.dp))
-
-        // Search Bar
-        GoalSearchBar(
-            value = searchKeyword,
-            onValueChange = { searchKeyword = it }
-        )
-
-        Spacer(Modifier.height(16.dp))
-
-        // ===== List Goal =====
-        Card(
-            shape = RoundedCornerShape(8.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            if (filteredGoals.isEmpty()) {
+        if (filteredGoals.isEmpty()) {
+            item {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -111,29 +114,20 @@ fun GoalScreen(
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp) // jarak antar item
+            }
+        } else {
+            items(filteredGoals) { goal ->
+                Card(
+                    shape = RoundedCornerShape(8.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (isDarkTheme) Color(0xFF1E1E1E) else Color.White
+                    ),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    items(filteredGoals) { goal ->
-                        Card(
-                            shape = RoundedCornerShape(8.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = if (isDarkTheme) Color(0xFF1E1E1E) else Color.White
-                            ),
-                            modifier = Modifier.fillMaxWidth()
-                                .padding(4.dp)
-                        ) {
-                            GoalItem(goal = goal, isDarkTheme = isDarkTheme, ketikaChecklist = {})
-                        }
-                    }
+                    GoalItem(goal = goal, isDarkTheme = isDarkTheme, ketikaChecklist = {})
                 }
-
             }
         }
     }
-}
 
+}
