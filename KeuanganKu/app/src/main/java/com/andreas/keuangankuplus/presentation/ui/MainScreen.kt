@@ -81,10 +81,8 @@ fun NavigationGraph(
             popEnterTransition = { slideInHorizontally(initialOffsetX = { -1000 }, animationSpec = tween(300)) },
             popExitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(300)) }
         ) {
-            val viewModel: GoalViewModel = hiltViewModel()
             GoalScreen(
                 isDarkTheme = isDarkTheme,
-                viewModel = viewModel,
                 onThemeChange = onThemeChange
             )
         }

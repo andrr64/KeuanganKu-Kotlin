@@ -8,10 +8,10 @@ import com.andreas.keuangankuplus.domain.usecase.GetAllGoalsUseCase
 import com.andreas.keuangankuplus.domain.usecase.InsertGoalUseCase
 import com.andreas.keuangankuplus.domain.usecase.UpdateGoalUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class GoalViewModel @Inject constructor(

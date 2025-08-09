@@ -34,9 +34,10 @@ import com.andreas.keuangankuplus.presentation.viewmodel.GoalViewModel
 @Composable
 fun GoalScreen(
     isDarkTheme: Boolean,
-    viewModel: GoalViewModel = hiltViewModel(),
-    onThemeChange: () -> Unit
+    onThemeChange: () -> Unit,
 ){
+
+    val viewModel: GoalViewModel = hiltViewModel()
     val goals by viewModel.goals.collectAsState()
 
     var filterTercapai by remember { mutableStateOf("all") }
