@@ -4,8 +4,9 @@ import com.andreas.keuangankuplus.data.local.GoalDao
 import com.andreas.keuangankuplus.data.local.GoalEntity
 import com.andreas.keuangankuplus.domain.model.GoalModel
 import com.andreas.keuangankuplus.domain.repository.GoalRepository
+import javax.inject.Inject
 
-class GoalRepositoryImpl(private val dao: GoalDao) : GoalRepository {
+class GoalRepositoryImpl @Inject constructor (private val dao: GoalDao) : GoalRepository {
 
     private fun GoalEntity.toDomain() = GoalModel(id, name, target, collected, achieved)
     private fun GoalModel.toEntity() = GoalEntity(id, name, target, collected, achieved)

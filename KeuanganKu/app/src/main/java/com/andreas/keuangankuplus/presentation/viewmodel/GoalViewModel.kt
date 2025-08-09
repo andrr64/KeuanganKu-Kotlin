@@ -7,11 +7,14 @@ import com.andreas.keuangankuplus.domain.usecase.DeleteGoalUseCase
 import com.andreas.keuangankuplus.domain.usecase.GetAllGoalsUseCase
 import com.andreas.keuangankuplus.domain.usecase.InsertGoalUseCase
 import com.andreas.keuangankuplus.domain.usecase.UpdateGoalUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class GoalViewModel(
+@HiltViewModel
+class GoalViewModel @Inject constructor(
     private val insertGoalUseCase: InsertGoalUseCase,
     private val getAllGoalsUseCase: GetAllGoalsUseCase,
     private val updateGoalUseCase: UpdateGoalUseCase,

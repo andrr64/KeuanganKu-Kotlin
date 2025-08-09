@@ -6,35 +6,32 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.andreas.keuangankuplus.presentation.ui.component.BottomBar
 import com.andreas.keuangankuplus.presentation.ui.features.goal.GoalScreen
 import com.andreas.keuangankuplus.presentation.ui.features.home.HomeScreen
 import com.andreas.keuangankuplus.presentation.ui.navigation.BottomNavItem
 import com.andreas.keuangankuplus.presentation.ui.theme.KeuanganKuTheme
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.andreas.keuangankuplus.presentation.viewmodel.GoalViewModel
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MainScreen() {
     var isDarkTheme by remember { mutableStateOf(false) }
-
     KeuanganKuTheme(darkTheme = isDarkTheme) {
         // 1. Menggunakan NavController khusus animasi dari Accompanist
-        val navController = rememberAnimatedNavController()
+        val navController = rememberNavController()
         Scaffold(
             bottomBar = {
                 BottomBar(
@@ -53,40 +50,6 @@ fun MainScreen() {
     }
 }
 
-@Composable
-fun BottomBar(
-    navController: NavHostController
-) {
-    val items = listOf(
-        BottomNavItem.Home,
-        BottomNavItem.Goal
-    )
-
-    NavigationBar {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
-
-        items.forEach { item ->
-            NavigationBarItem(
-                selected = currentRoute == item.route,
-                onClick = {
-                    navController.navigate(item.route) {
-                        navController.graph.startDestinationRoute?.let { route ->
-                            popUpTo(route) {
-                                saveState = true
-                            }
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                },
-                icon = { Icon(imageVector = item.icon, contentDescription = item.title) },
-                label = { Text(text = item.title) }
-            )
-        }
-    }
-}
-
 /**
  * Composable yang berisi semua rute tujuan (NavHost)
  */
@@ -97,10 +60,7 @@ fun NavigationGraph(
     isDarkTheme: Boolean,
     onThemeChange: () -> Unit
 ) {
-    // 2. Menggunakan AnimatedNavHost, BUKAN NavHost biasa
-    AnimatedNavHost(navController = navController, startDestination = BottomNavItem.Home.route) {
-
-        // 3. Menggunakan composable dari Accompanist yang memiliki parameter animasi
+    NavHost(navController = navController, startDestination = BottomNavItem.Home.route) {
         composable(
             route = BottomNavItem.Home.route,
             enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(300)) },
@@ -121,8 +81,10 @@ fun NavigationGraph(
             popEnterTransition = { slideInHorizontally(initialOffsetX = { -1000 }, animationSpec = tween(300)) },
             popExitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(300)) }
         ) {
+            val viewModel: GoalViewModel = hiltViewModel()
             GoalScreen(
                 isDarkTheme = isDarkTheme,
+                viewModel = viewModel,
                 onThemeChange = onThemeChange
             )
         }

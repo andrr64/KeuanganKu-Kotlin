@@ -16,6 +16,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,27 +27,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.andreas.keuangankuplus.domain.model.GoalModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.andreas.keuangankuplus.presentation.ui.component.GoalItem
+import com.andreas.keuangankuplus.presentation.viewmodel.GoalViewModel
 
 @Composable
 fun GoalScreen(
     isDarkTheme: Boolean,
+    viewModel: GoalViewModel = hiltViewModel(),
     onThemeChange: () -> Unit
 ){
-    var goals by remember {
-        mutableStateOf(
-            listOf(
-                GoalModel(1, "Beli Motor", 15000000, 5000000, false),
-                GoalModel(2, "Dana Darurat", 10000000, 10000000, true),
-                GoalModel(3, "Liburan Bali", 5000000, 2500000, false)
-            )
-        )
-    }
+    val goals by viewModel.goals.collectAsState()
 
     var filterTercapai by remember { mutableStateOf("all") }
     var filterJumlah by remember { mutableStateOf("all") }
     var searchKeyword by remember { mutableStateOf("") }
+
+    // useEffect([])
+    LaunchedEffect(Unit) {
+        viewModel.loadGoals()
+    }
 
     val filteredGoals = goals
         .filter {
