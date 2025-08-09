@@ -2,8 +2,8 @@ package com.andreas.keuangankuplus.domain.model
 
 data class GoalModel(
     val id: Int,
-    val nama: String,
+    val name: String,
     val target: Long,
-    val terkumpul: Long,
-    val tercapai: Boolean
+    val collected: Long,
+    val achieved: Boolean
 )
