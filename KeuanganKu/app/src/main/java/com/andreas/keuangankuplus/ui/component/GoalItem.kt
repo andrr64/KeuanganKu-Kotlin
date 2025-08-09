@@ -1,0 +1,80 @@
+package com.andreas.keuangankuplus.ui.component
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import com.andreas.keuangankuplus.domain.model.GoalModel
+import kotlin.math.min
+
+@Composable
+fun GoalItem(
+    goal: GoalModel,
+    isDarkTheme: Boolean,
+    ketikaChecklist: (Boolean) -> Unit
+) {
+    val progressColor = if (goal.tercapai) Color.Green else Color.Red
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Lingkaran status
+                Box(
+                    modifier = Modifier
+                        .size(12.dp)
+                        .padding(end = 8.dp)
+                        .background(progressColor, shape = CircleShape)
+                )
+
+                // Judul goal
+                Text(
+                    text = goal.nama,
+                    fontWeight = FontWeight.SemiBold,
+                    color = if (isDarkTheme) Color.White else Color.Black,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
+            // Status + checklist
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = if (goal.tercapai) "Tercapai" else "Belum",
+                    color = progressColor,
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Spacer(Modifier.width(8.dp))
+                Checkbox(
+                    checked = goal.tercapai,
+                    onCheckedChange = ketikaChecklist
+                )
+            }
+        }
+
+        Spacer(Modifier.height(4.dp))
+
+        // Baris 2: Nominal
+        Text(
+            "Rp ${goal.terkumpul} / Rp ${goal.target}",
+            style = MaterialTheme.typography.bodySmall,
+            color = if (isDarkTheme) Color.Gray else Color.DarkGray
+        )
+    }
+}
