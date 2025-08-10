@@ -1,5 +1,6 @@
 package com.andreas.keuangankuplus.presentation.ui.features.goal
 
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,9 +12,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,18 +34,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.andreas.keuangankuplus.domain.model.GoalModel
 import com.andreas.keuangankuplus.presentation.ui.component.GoalItem
+import com.andreas.keuangankuplus.presentation.ui.dialog.AddGoalDialog
 import com.andreas.keuangankuplus.presentation.viewmodel.GoalViewModel
 
 @Composable
 fun GoalScreen(
     isDarkTheme: Boolean,
     onThemeChange: () -> Unit,
-){
+) {
 
     val viewModel: GoalViewModel = hiltViewModel()
     val goals by viewModel.goals.collectAsState()
-
+    var showAddGoalDialog by remember { mutableStateOf(false) }
     var filterTercapai by remember { mutableStateOf("all") }
     var filterJumlah by remember { mutableStateOf("all") }
     var searchKeyword by remember { mutableStateOf("") }
@@ -67,66 +75,90 @@ fun GoalScreen(
             } else list
         }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
-            .background(if (!isDarkTheme) Color.White else MaterialTheme.colorScheme.background),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        item {
-            Text(
-                text = "Goal",
-                fontWeight = FontWeight.SemiBold,
-                style = MaterialTheme.typography.titleLarge,
-                color = if (isDarkTheme) Color.White else Color.Black
-            )
-            Spacer(Modifier.height(4.dp))
-            Text(
-                text = "Daftar tujuan keuangan yang sedang atau telah dicapai.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = if (isDarkTheme) Color.Gray else Color.DarkGray
-            )
-            Spacer(Modifier.height(16.dp))
-            GoalFilterSection(
-                filterTercapai = filterTercapai,
-                onFilterTercapaiChange = { filterTercapai = it },
-                filterJumlah = filterJumlah,
-                onFilterJumlahChange = { filterJumlah = it }
-            )
-            Spacer(Modifier.height(16.dp))
-            GoalSearchBar(
-                value = searchKeyword,
-                onValueChange = { searchKeyword = it }
-            )
-            Spacer(Modifier.height(16.dp))
-        }
 
-        if (filteredGoals.isEmpty()) {
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "Tidak ada goal yang ditemukan.",
-                        color = if (isDarkTheme) Color.Gray else Color.DarkGray,
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
+//    UI
+    if (showAddGoalDialog){
+        AddGoalDialog(
+            onDismiss = { showAddGoalDialog = false },
+            onSave = { name ->
+//                viewModel.addGoal(GoalModel(name = name, achieved = false))
+                showAddGoalDialog = false
+            },
+            isDarkTheme = isDarkTheme
+        )
+    }
+
+    Scaffold (
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { showAddGoalDialog = true }
+            ) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Tambah Goal")
             }
-        } else {
-            items(filteredGoals) { goal ->
-                Card(
-                    shape = RoundedCornerShape(8.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = if (isDarkTheme) Color(0xFF1E1E1E) else Color.White
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    GoalItem(goal = goal, isDarkTheme = isDarkTheme, ketikaChecklist = {})
+        }
+    ){
+        paddingValues ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+                .padding(paddingValues),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            item {
+                Text(
+                    text = "Goal",
+                    fontWeight = FontWeight.SemiBold,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = if (isDarkTheme) Color.White else Color.Black
+                )
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    text = "Daftar tujuan keuangan yang sedang atau telah dicapai.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = if (isDarkTheme) Color.Gray else Color.DarkGray
+                )
+                Spacer(Modifier.height(16.dp))
+                GoalFilterSection(
+                    filterTercapai = filterTercapai,
+                    onFilterTercapaiChange = { filterTercapai = it },
+                    filterJumlah = filterJumlah,
+                    onFilterJumlahChange = { filterJumlah = it }
+                )
+                Spacer(Modifier.height(16.dp))
+                GoalSearchBar(
+                    value = searchKeyword,
+                    onValueChange = { searchKeyword = it }
+                )
+                Spacer(Modifier.height(16.dp))
+            }
+
+            if (filteredGoals.isEmpty()) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Tidak ada goal yang ditemukan.",
+                            color = if (isDarkTheme) Color.Gray else Color.DarkGray,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                }
+            } else {
+                items(filteredGoals) { goal ->
+                    Card(
+                        shape = RoundedCornerShape(8.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = if (isDarkTheme) Color(0xFF1E1E1E) else Color.White
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        GoalItem(goal = goal, isDarkTheme = isDarkTheme, ketikaChecklist = {})
+                    }
                 }
             }
         }
