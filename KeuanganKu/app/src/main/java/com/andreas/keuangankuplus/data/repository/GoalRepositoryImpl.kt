@@ -6,12 +6,27 @@ import com.andreas.keuangankuplus.domain.model.GoalModel
 import com.andreas.keuangankuplus.domain.repository.GoalRepository
 import javax.inject.Inject
 
-class GoalRepositoryImpl @Inject constructor (
+class GoalRepositoryImpl @Inject constructor(
     private val dao: GoalDao
 ) : GoalRepository {
 
-    private fun GoalEntity.toDomain() = GoalModel(id, name, target, collected, achieved)
-    private fun GoalModel.toEntity() = GoalEntity(id, name, target, collected, achieved)
+    private fun GoalEntity.toDomain() = GoalModel(
+        id, name, target, collected, achieved,
+        deadline,
+        createdAt,
+        updatedAt
+    )
+
+    private fun GoalModel.toEntity() = GoalEntity(
+        id,
+        name,
+        target,
+        collected,
+        achieved,
+        deadline,
+        createdAt,
+        updatedAt
+    )
 
     override suspend fun insertGoal(goal: GoalModel) {
         dao.insert(goal.toEntity())

@@ -15,6 +15,7 @@ sealed class BottomNavItem(
         title = "Home",
         icon = Icons.Default.Home
     )
+
     object Goal : BottomNavItem(
         route = "goal",
         title = "Goal",

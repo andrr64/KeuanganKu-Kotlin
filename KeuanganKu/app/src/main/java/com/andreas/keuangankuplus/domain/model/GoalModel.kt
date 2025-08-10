@@ -5,5 +5,8 @@ data class GoalModel(
     val name: String,
     val target: Long,
     val collected: Long,
-    val achieved: Boolean
+    val achieved: Boolean,
+    val deadline: Long?,
+    val createdAt: Long,
+    val updatedAt: Long
 )

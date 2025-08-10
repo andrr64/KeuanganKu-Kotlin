@@ -1,7 +1,6 @@
 package com.andreas.keuangankuplus.presentation.ui.features.goal
 
-import androidx.compose.animation.fadeIn
-import androidx.compose.foundation.background
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -31,20 +30,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.andreas.keuangankuplus.domain.model.GoalModel
 import com.andreas.keuangankuplus.presentation.ui.component.GoalItem
 import com.andreas.keuangankuplus.presentation.ui.dialog.AddGoalDialog
 import com.andreas.keuangankuplus.presentation.viewmodel.GoalViewModel
+import com.andreas.keuangankuplus.presentation.viewmodel.UiEvent
 
 @Composable
 fun GoalScreen(
     isDarkTheme: Boolean,
     onThemeChange: () -> Unit,
 ) {
-
     val viewModel: GoalViewModel = hiltViewModel()
     val goals by viewModel.goals.collectAsState()
     var showAddGoalDialog by remember { mutableStateOf(false) }
@@ -75,20 +74,30 @@ fun GoalScreen(
             } else list
         }
 
+    val context = LocalContext.current
 
-//    UI
-    if (showAddGoalDialog){
+    LaunchedEffect(key1 = viewModel.uiEvent) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                is UiEvent.SaveResult -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    if (showAddGoalDialog) {
         AddGoalDialog(
             onDismiss = { showAddGoalDialog = false },
             onSave = { name ->
-//                viewModel.addGoal(GoalModel(name = name, achieved = false))
+                viewModel.addGoal(name)
                 showAddGoalDialog = false
             },
             isDarkTheme = isDarkTheme
         )
     }
 
-    Scaffold (
+    Scaffold(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showAddGoalDialog = true }
@@ -96,8 +105,7 @@ fun GoalScreen(
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Tambah Goal")
             }
         }
-    ){
-        paddingValues ->
+    ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()

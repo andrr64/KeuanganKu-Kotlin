@@ -1,4 +1,5 @@
 package com.andreas.keuangankuplus.domain.model
+
 import java.time.LocalDateTime
 
 data class TransactionModel(

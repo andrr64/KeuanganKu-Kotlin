@@ -14,7 +14,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,7 +43,7 @@ fun AddGoalDialog(
                 Spacer(modifier = Modifier.height(8.dp))
                 InputTextField(
                     value = goalName,
-                    onValueChange = {goalName = it},
+                    onValueChange = { goalName = it },
                     label = "Nama Goal",
                 )
                 Spacer(modifier = Modifier.height(16.dp))

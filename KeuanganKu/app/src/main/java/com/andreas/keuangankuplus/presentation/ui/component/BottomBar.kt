@@ -3,42 +3,30 @@ package com.andreas.keuangankuplus.presentation.ui.component
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.compose.ui.graphics.Color
 import com.andreas.keuangankuplus.presentation.ui.navigation.BottomNavItem
 
 @Composable
 fun BottomBar(
-    navController: NavHostController
+    selectedIndex: Int,
+    onItemSelected: (Int) -> Unit
 ) {
-    val items = listOf(
-        BottomNavItem.Home,
-        BottomNavItem.Goal
-    )
-
+    val items = listOf(BottomNavItem.Home, BottomNavItem.Goal)
     NavigationBar {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
-
-        items.forEach { item ->
+        items.forEachIndexed { index, item ->
             NavigationBarItem(
-                selected = currentRoute == item.route,
-                onClick = {
-                    navController.navigate(item.route) {
-                        navController.graph.startDestinationRoute?.let { route ->
-                            popUpTo(route) {
-                                saveState = true
-                            }
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                },
-                icon = { Icon(imageVector = item.icon, contentDescription = item.title) },
-                label = { Text(text = item.title) }
+                selected = selectedIndex == index,
+                onClick = { onItemSelected(index) },
+                icon = { Icon(item.icon, contentDescription = item.title) },
+                label = { Text(item.title) },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = Color.White,
+                    selectedTextColor = Color.White,
+                    indicatorColor = Color(0xFF6366F1)
+                )
             )
         }
     }

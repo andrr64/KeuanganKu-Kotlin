@@ -3,6 +3,7 @@ package com.andreas.keuangankuplus.data.local
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+
 @Entity(tableName = "goals")
 data class GoalEntity(
     @PrimaryKey(autoGenerate = true)
@@ -10,5 +11,8 @@ data class GoalEntity(
     val name: String,
     val target: Long,
     val collected: Long,
-    val achieved: Boolean
+    val achieved: Boolean,
+    val deadline: Long?,   // nullable
+    val createdAt: Long,
+    val updatedAt: Long
 )

@@ -46,7 +46,9 @@ fun GoalFilterSection(
                 readOnly = true,
                 label = { Text("Status") },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expandedStatus) },
-                modifier = Modifier.menuAnchor().fillMaxWidth()
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth()
             )
             ExposedDropdownMenu(
                 expanded = expandedStatus,
@@ -84,7 +86,9 @@ fun GoalFilterSection(
                 readOnly = true,
                 label = { Text("Jumlah Data") },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expandedJumlah) },
-                modifier = Modifier.menuAnchor().fillMaxWidth()
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth()
             )
             ExposedDropdownMenu(
                 expanded = expandedJumlah,
