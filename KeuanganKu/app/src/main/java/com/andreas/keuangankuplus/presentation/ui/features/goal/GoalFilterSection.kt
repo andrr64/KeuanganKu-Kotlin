@@ -16,8 +16,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.andreas.keuangankuplus.presentation.ui.component.AppDropdown
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GoalFilterSection(
     filterTercapai: String,
@@ -29,84 +29,45 @@ fun GoalFilterSection(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Filter Status
-        var expandedStatus by remember { mutableStateOf(false) }
-        ExposedDropdownMenuBox(
-            expanded = expandedStatus,
-            onExpandedChange = { expandedStatus = !expandedStatus },
-            modifier = Modifier.weight(1f)
-        ) {
-            OutlinedTextField(
-                value = when (filterTercapai) {
-                    "true" -> "Tercapai"
-                    "false" -> "Belum Tercapai"
-                    else -> "Semua"
-                },
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("Status") },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expandedStatus) },
-                modifier = Modifier
-                    .menuAnchor()
-                    .fillMaxWidth()
-            )
-            ExposedDropdownMenu(
-                expanded = expandedStatus,
-                onDismissRequest = { expandedStatus = false }
-            ) {
-                DropdownMenuItem(
-                    text = { Text("Semua") },
-                    onClick = { onFilterTercapaiChange("all"); expandedStatus = false }
+        AppDropdown(
+            label = "Status",
+            selectedText = when (filterTercapai) {
+                "true" -> "Tercapai"
+                "false" -> "Belum Tercapai"
+                else -> "Semua"
+            },
+            options = listOf("Semua", "Tercapai", "Belum Tercapai"),
+            onOptionSelected = { option ->
+                onFilterTercapaiChange(
+                    when (option) {
+                        "Tercapai" -> "true"
+                        "Belum Tercapai" -> "false"
+                        else -> "all"
+                    }
                 )
-                DropdownMenuItem(
-                    text = { Text("Tercapai") },
-                    onClick = { onFilterTercapaiChange("true"); expandedStatus = false }
-                )
-                DropdownMenuItem(
-                    text = { Text("Belum Tercapai") },
-                    onClick = { onFilterTercapaiChange("false"); expandedStatus = false }
-                )
-            }
-        }
+            },
+            modifier = Modifier.weight(1f) // ✅ biar proporsional
+        )
 
-        // Filter Jumlah
-        var expandedJumlah by remember { mutableStateOf(false) }
-        ExposedDropdownMenuBox(
-            expanded = expandedJumlah,
-            onExpandedChange = { expandedJumlah = !expandedJumlah },
-            modifier = Modifier.weight(1f)
-        ) {
-            OutlinedTextField(
-                value = when (filterJumlah) {
-                    "5" -> "5 Data"
-                    "10" -> "10 Data"
-                    else -> "Semua"
-                },
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("Jumlah Data") },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expandedJumlah) },
-                modifier = Modifier
-                    .menuAnchor()
-                    .fillMaxWidth()
-            )
-            ExposedDropdownMenu(
-                expanded = expandedJumlah,
-                onDismissRequest = { expandedJumlah = false }
-            ) {
-                DropdownMenuItem(
-                    text = { Text("Semua") },
-                    onClick = { onFilterJumlahChange("all"); expandedJumlah = false }
+        AppDropdown(
+            label = "Jumlah Data",
+            selectedText = when (filterJumlah) {
+                "5" -> "5 Data"
+                "10" -> "10 Data"
+                else -> "Semua"
+            },
+            options = listOf("Semua", "5 Data", "10 Data"),
+            onOptionSelected = { option ->
+                onFilterJumlahChange(
+                    when (option) {
+                        "5 Data" -> "5"
+                        "10 Data" -> "10"
+                        else -> "all"
+                    }
                 )
-                DropdownMenuItem(
-                    text = { Text("5 Data") },
-                    onClick = { onFilterJumlahChange("5"); expandedJumlah = false }
-                )
-                DropdownMenuItem(
-                    text = { Text("10 Data") },
-                    onClick = { onFilterJumlahChange("10"); expandedJumlah = false }
-                )
-            }
-        }
+            },
+            modifier = Modifier.weight(1f) // ✅ sama kayak sebelumnya
+        )
     }
+
 }

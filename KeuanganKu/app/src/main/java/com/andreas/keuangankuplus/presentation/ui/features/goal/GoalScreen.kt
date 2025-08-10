@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.andreas.keuangankuplus.presentation.ui.component.GoalItem
+import com.andreas.keuangankuplus.presentation.ui.component.SearchField
 import com.andreas.keuangankuplus.presentation.ui.dialog.AddGoalDialog
 import com.andreas.keuangankuplus.presentation.viewmodel.GoalViewModel
 import com.andreas.keuangankuplus.presentation.viewmodel.UiEvent
@@ -134,7 +135,7 @@ fun GoalScreen(
                     onFilterJumlahChange = { filterJumlah = it }
                 )
                 Spacer(Modifier.height(16.dp))
-                GoalSearchBar(
+                SearchField(
                     value = searchKeyword,
                     onValueChange = { searchKeyword = it }
                 )
