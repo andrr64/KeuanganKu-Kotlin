@@ -10,6 +10,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,42 +27,28 @@ fun AppDropdown(
     selectedText: String,
     options: List<String>,
     onOptionSelected: (String) -> Unit,
-    modifier: Modifier = Modifier // ✅ biar bisa diatur dari luar
+    modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
-
-    val fieldColors = TextFieldDefaults.colors(
-        focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-        disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-
-        focusedIndicatorColor = Color.Transparent,
-        unfocusedIndicatorColor = Color.Transparent,
-        disabledIndicatorColor = Color.Transparent,
-
-        focusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
-    )
-
 
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = !expanded },
-        modifier = modifier // ✅ penting, biar ikut weight/width dari parent
+        modifier = modifier
     ) {
-        OutlinedTextField(
+        TextField(
             value = selectedText,
             onValueChange = {},
             readOnly = true,
-            label = {
-                Text(
-                    text = label,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.background(Color.Transparent)
-                )},
+            label = { Text(text = label) },
+            textStyle = MaterialTheme.typography.bodyMedium,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
             shape = RoundedCornerShape(10.dp),
-            colors = fieldColors,
+            colors = ExposedDropdownMenuDefaults.textFieldColors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            ),
             modifier = Modifier
                 .menuAnchor()
                 .fillMaxWidth()
@@ -73,7 +60,7 @@ fun AppDropdown(
         ) {
             options.forEach { option ->
                 DropdownMenuItem(
-                    text = { Text(option) },
+                    text = { Text(text = option) },
                     onClick = {
                         onOptionSelected(option)
                         expanded = false

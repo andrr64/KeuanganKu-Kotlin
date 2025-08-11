@@ -16,12 +16,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.andreas.keuangankuplus.presentation.ui.component.form.InputNumericField
 import com.andreas.keuangankuplus.presentation.ui.component.form.InputTextField
 
 @Composable
@@ -31,6 +33,7 @@ fun AddGoalDialog(
     isDarkTheme: Boolean
 ) {
     var goalName by remember { mutableStateOf("") }
+    var target by remember { mutableDoubleStateOf(0.0) }
 
     Dialog(onDismissRequest = onDismiss) {
         Surface(

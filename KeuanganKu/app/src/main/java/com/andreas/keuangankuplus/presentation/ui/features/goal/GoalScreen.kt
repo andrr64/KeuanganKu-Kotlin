@@ -10,11 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -105,7 +102,8 @@ fun GoalScreen(
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Tambah Goal")
             }
-        }
+        },
+        containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -128,16 +126,18 @@ fun GoalScreen(
                     color = if (isDarkTheme) Color.Gray else Color.DarkGray
                 )
                 Spacer(Modifier.height(16.dp))
+
+                SearchField(
+                    value = searchKeyword,
+                    placeholder = "Cari goal...",
+                    onValueChange = { searchKeyword = it }
+                )
+                Spacer(Modifier.height(16.dp))
                 GoalFilterSection(
                     filterTercapai = filterTercapai,
                     onFilterTercapaiChange = { filterTercapai = it },
                     filterJumlah = filterJumlah,
                     onFilterJumlahChange = { filterJumlah = it }
-                )
-                Spacer(Modifier.height(16.dp))
-                SearchField(
-                    value = searchKeyword,
-                    onValueChange = { searchKeyword = it }
                 )
                 Spacer(Modifier.height(16.dp))
             }
@@ -159,15 +159,7 @@ fun GoalScreen(
                 }
             } else {
                 items(filteredGoals) { goal ->
-                    Card(
-                        shape = RoundedCornerShape(8.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = if (isDarkTheme) Color(0xFF1E1E1E) else Color.White
-                        ),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        GoalItem(goal = goal, isDarkTheme = isDarkTheme, ketikaChecklist = {})
-                    }
+                        GoalItem(goal = goal, isDarkTheme=isDarkTheme, whenCheckPressed = {})
                 }
             }
         }
