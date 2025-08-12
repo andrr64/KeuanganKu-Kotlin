@@ -1,5 +1,6 @@
 package com.andreas.keuangankuplus.presentation.ui.features.goal
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,11 +31,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.andreas.keuangankuplus.presentation.ui.component.GoalItem
+import com.andreas.keuangankuplus.domain.model.GoalModel
+import com.andreas.keuangankuplus.presentation.ui.component.ConfirmationDialog
 import com.andreas.keuangankuplus.presentation.ui.component.SearchField
-import com.andreas.keuangankuplus.presentation.ui.dialog.AddGoalDialog
+import com.andreas.keuangankuplus.presentation.ui.component.item.GoalItem
+import com.andreas.keuangankuplus.presentation.ui.modal.ModalAddGoal
+import com.andreas.keuangankuplus.presentation.ui.modal.ModalEditGoal
 import com.andreas.keuangankuplus.presentation.viewmodel.GoalViewModel
 import com.andreas.keuangankuplus.presentation.viewmodel.UiEvent
 
@@ -45,15 +50,16 @@ fun GoalScreen(
 ) {
     val viewModel: GoalViewModel = hiltViewModel()
     val goals by viewModel.goals.collectAsState()
-
     var showAddGoalDialog by rememberSaveable { mutableStateOf(false) }
-    var filterTercapai by remember { mutableStateOf("all") }
-    var filterJumlah by remember { mutableStateOf("all") }
-    var searchKeyword by remember { mutableStateOf("") }
+    var showConfirmDelete by remember { mutableStateOf(false) }
 
+    var selectedGoalToEdit by remember { mutableStateOf<GoalModel?>(null) }
+    var filterAchieved by remember { mutableStateOf("all") }
+    var filterLimit by remember { mutableStateOf("all") }
+    var searchKeyword by remember { mutableStateOf("") }
     val context = LocalContext.current
 
-    // Listen UI event
+    // Listen for UI events
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collect { event ->
             if (event is UiEvent.SaveResult) {
@@ -65,7 +71,7 @@ fun GoalScreen(
     // Filter goals
     val filteredGoals = goals
         .filter {
-            when (filterTercapai) {
+            when (filterAchieved) {
                 "true" -> it.achieved
                 "false" -> !it.achieved
                 else -> true
@@ -73,14 +79,14 @@ fun GoalScreen(
         }
         .filter { it.name.contains(searchKeyword, ignoreCase = true) }
         .let { list ->
-            if (filterJumlah != "all") {
-                val jumlah = filterJumlah.toIntOrNull() ?: list.size
-                list.take(jumlah)
+            if (filterLimit != "all") {
+                val limit = filterLimit.toIntOrNull() ?: list.size
+                list.take(limit)
             } else list
         }
 
     if (showAddGoalDialog) {
-        AddGoalDialog(
+        ModalAddGoal(
             onDismiss = { showAddGoalDialog = false },
             onSave = { newGoal ->
                 viewModel.addGoal(newGoal)
@@ -88,11 +94,44 @@ fun GoalScreen(
             }
         )
     }
+    if (showConfirmDelete){
+        ConfirmationDialog(
+            showDialog = true,
+            onConfirm = {
+                selectedGoalToEdit?.let {
+                    viewModel.deleteGoal(it.id)
+                }
+                selectedGoalToEdit = null
+            },
+            onDismiss = {
+                showConfirmDelete = false
+            },
+            message = "Apakah kamu yakin ingin menghapus data ini?"
+        )
+    }
+    if (selectedGoalToEdit != null) {
+        ModalEditGoal(
+            goal = selectedGoalToEdit!!, // sudah dicek tidak null
+            onDismiss = { selectedGoalToEdit = null },
+            onSave = { updatedGoal ->
+                viewModel.updateGoal(updatedGoal)
+                selectedGoalToEdit = null
+            },
+            onDelete = {
+                showConfirmDelete = true
+            }
+        )
+    }
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { showAddGoalDialog = true }) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Tambah Goal")
+            FloatingActionButton(
+                onClick = { showAddGoalDialog = true },
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add Goal"
+                )
             }
         },
         containerColor = MaterialTheme.colorScheme.background
@@ -106,31 +145,40 @@ fun GoalScreen(
         ) {
             item {
                 Text(
-                    text = "Goal",
+                    text = "My Goals",
                     fontWeight = FontWeight.SemiBold,
                     style = MaterialTheme.typography.titleLarge,
                     color = if (isDarkTheme) Color.White else Color.Black
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    text = "Daftar tujuan keuangan yang sedang atau telah dicapai.",
+                    text = "Track your financial goals, whether in progress or completed.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = if (isDarkTheme) Color.Gray else Color.DarkGray
                 )
                 Spacer(Modifier.height(16.dp))
                 SearchField(
                     value = searchKeyword,
-                    placeholder = "Cari goal...",
+                    placeholder = "Search goals...",
                     onValueChange = { searchKeyword = it }
                 )
                 Spacer(Modifier.height(16.dp))
                 GoalFilterSection(
-                    filterTercapai = filterTercapai,
-                    onFilterTercapaiChange = { filterTercapai = it },
-                    filterJumlah = filterJumlah,
-                    onFilterJumlahChange = { filterJumlah = it }
+                    filterTercapai = filterAchieved,
+                    onFilterTercapaiChange = { filterAchieved = it },
+                    filterJumlah = filterLimit,
+                    onFilterJumlahChange = { filterLimit = it }
                 )
                 Spacer(Modifier.height(16.dp))
+            }
+
+            item {
+                Text(
+                    text = "List Goal",
+                    fontWeight = FontWeight.SemiBold,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = if (isDarkTheme) Color.White else Color.Black
+                )
             }
 
             if (filteredGoals.isEmpty()) {
@@ -142,7 +190,7 @@ fun GoalScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Tidak ada goal yang ditemukan.",
+                            text = "No goals found.",
                             color = if (isDarkTheme) Color.Gray else Color.DarkGray,
                             style = MaterialTheme.typography.bodySmall
                         )
@@ -150,9 +198,29 @@ fun GoalScreen(
                 }
             } else {
                 items(filteredGoals) { goal ->
-                    GoalItem(goal = goal, isDarkTheme = isDarkTheme, whenCheckPressed = {})
+                    GoalItem(
+                        goal = goal,
+                        whenClicked = {
+                            selectedGoalToEdit = goal
+                            Log.e("GoalScreen.kt", "Edit goal : $goal")
+                        },
+                        whenCheckPressed = { viewModel.toggleGoalStatus(goal) }
+                    )
                 }
             }
+
+            item {
+                Spacer(Modifier.height(45.dp))
+                Text(
+                    text = "The end.",
+                    style = MaterialTheme.typography.bodySmall,
+                    textAlign = TextAlign.Center,
+                    color = if (isDarkTheme) Color.Gray else Color.DarkGray,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(Modifier.height(45.dp))
+            }
+
         }
     }
 }

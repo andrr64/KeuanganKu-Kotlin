@@ -28,3 +28,13 @@ class UpdateGoalUseCase @Inject constructor(private val repository: GoalReposito
 class DeleteGoalUseCase @Inject constructor(private val repository: GoalRepository) {
     suspend operator fun invoke(id: Int) = repository.deleteGoal(id)
 }
+
+
+class ToggleGoalAchievedUseCase @Inject constructor(
+    private val repository: GoalRepository
+) {
+    suspend operator fun invoke(goal: GoalModel) {
+        val updatedGoal = goal.copy(achieved = !goal.achieved)
+        repository.updateGoal(updatedGoal)
+    }
+}

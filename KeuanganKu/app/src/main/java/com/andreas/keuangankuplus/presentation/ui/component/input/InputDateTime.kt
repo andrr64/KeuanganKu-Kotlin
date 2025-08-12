@@ -1,4 +1,4 @@
-package com.andreas.keuangankuplus.presentation.ui.component.form
+package com.andreas.keuangankuplus.presentation.ui.component.input
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -12,14 +12,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 
 @Composable
@@ -33,22 +31,7 @@ fun InputDateTime(
     val calendar = remember { Calendar.getInstance() }
 
     val saveFormat = remember { SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()) }
-    val displayFormat = remember { SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm", Locale("id", "ID")) }
-
-    LaunchedEffect(Unit) {
-        if (value.isBlank()) {
-            onValueChange(saveFormat.format(calendar.time))
-        }
-    }
-
-    val formattedValue = remember(value) {
-        try {
-            val date = saveFormat.parse(value)
-            displayFormat.format(date ?: Date())
-        } catch (e: Exception) {
-            value // fallback kalau parsing gagal
-        }
-    }
+//    val displayFormat = remember { SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm", Locale("id", "ID")) }
 
     fun openDateTimePicker() {
         DatePickerDialog(
@@ -78,7 +61,7 @@ fun InputDateTime(
     }
 
     TextField(
-        value = formattedValue, // tampilan ke user
+        value = value,
         onValueChange = { },
         label = { Text(label) },
         singleLine = true,

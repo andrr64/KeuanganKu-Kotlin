@@ -7,6 +7,7 @@ import com.andreas.keuangankuplus.domain.model.GoalModel
 import com.andreas.keuangankuplus.domain.usecase.DeleteGoalUseCase
 import com.andreas.keuangankuplus.domain.usecase.GetAllGoalsAsFlowUseCase
 import com.andreas.keuangankuplus.domain.usecase.InsertGoalUseCase
+import com.andreas.keuangankuplus.domain.usecase.ToggleGoalAchievedUseCase
 import com.andreas.keuangankuplus.domain.usecase.UpdateGoalUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -21,7 +22,8 @@ class GoalViewModel @Inject constructor(
     private val insertGoalUseCase: InsertGoalUseCase,
     private val getAllGoalsUseCase: GetAllGoalsAsFlowUseCase,
     private val updateGoalUseCase: UpdateGoalUseCase,
-    private val deleteGoalUseCase: DeleteGoalUseCase
+    private val deleteGoalUseCase: DeleteGoalUseCase,
+    private val toggleGoalAchievedUseCase: ToggleGoalAchievedUseCase
 ) : ViewModel() {
 
     private val _goals = MutableStateFlow<List<GoalModel>>(emptyList())
@@ -32,8 +34,14 @@ class GoalViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getAllGoalsUseCase().collect { goalsList ->
-                _goals.value = goalsList
+            try {
+                getAllGoalsUseCase().collect { goalsList ->
+                    _goals.value = goalsList
+                    Log.d("GoalViewModel", "Goals updated: ${goalsList.size} items")
+                }
+            } catch (e: Exception) {
+                Log.e("GoalViewModel", "Error collecting goals: ${e.message}", e)
+                _uiEvent.emit(UiEvent.SaveResult(false, "Gagal memuat daftar goals"))
             }
         }
     }
@@ -43,27 +51,70 @@ class GoalViewModel @Inject constructor(
             try {
                 insertGoalUseCase(goal)
                 _uiEvent.emit(UiEvent.SaveResult(true, "Goal berhasil disimpan"))
+                Log.d("GoalViewModel", "Goal added: $goal")
             } catch (e: Exception) {
                 _uiEvent.emit(
                     UiEvent.SaveResult(
                         false,
-                        "Gagal menyimpan goal: ${e.message ?: "Kesalahan"}"
+                        "Gagal menyimpan goal: ${e.message ?: "Kesalahan tidak diketahui"}"
                     )
                 )
-                Log.e("GoalViewModel", e.message.toString())
+                Log.e("GoalViewModel", "Error adding goal: ${e.message}", e)
             }
         }
     }
 
     fun updateGoal(goal: GoalModel) {
         viewModelScope.launch {
-            updateGoalUseCase(goal)
+            try {
+                updateGoalUseCase(goal)
+                _uiEvent.emit(UiEvent.SaveResult(true, "Goal berhasil diperbarui"))
+                Log.d("GoalViewModel", "Goal updated: $goal")
+            } catch (e: Exception) {
+                _uiEvent.emit(
+                    UiEvent.SaveResult(
+                        false,
+                        "Gagal memperbarui goal: ${e.message ?: "Kesalahan tidak diketahui"}"
+                    )
+                )
+                Log.e("GoalViewModel", "Error updating goal: ${e.message}", e)
+            }
+        }
+    }
+
+    fun toggleGoalStatus(goal: GoalModel) {
+        viewModelScope.launch {
+            try {
+                toggleGoalAchievedUseCase(goal)
+                _uiEvent.emit(UiEvent.SaveResult(true, "Status goal berhasil diperbarui"))
+                Log.d("GoalViewModel", "Goal status toggled: $goal")
+            } catch (e: Exception) {
+                _uiEvent.emit(
+                    UiEvent.SaveResult(
+                        false,
+                        "Gagal memperbarui status goal: ${e.message ?: "Kesalahan tidak diketahui"}"
+                    )
+                )
+                Log.e("GoalViewModel", "Error toggling goal status: ${e.message}", e)
+            }
         }
     }
 
     fun deleteGoal(id: Int) {
         viewModelScope.launch {
-            deleteGoalUseCase(id)
+            try {
+                deleteGoalUseCase(id)
+                _uiEvent.emit(UiEvent.SaveResult(true, "Goal berhasil dihapus"))
+                Log.d("GoalViewModel", "Goal deleted with id: $id")
+            } catch (e: Exception) {
+                _uiEvent.emit(
+                    UiEvent.SaveResult(
+                        false,
+                        "Gagal menghapus goal: ${e.message ?: "Kesalahan tidak diketahui"}"
+                    )
+                )
+                Log.e("GoalViewModel", "Error deleting goal id $id: ${e.message}", e)
+            }
         }
     }
 }
