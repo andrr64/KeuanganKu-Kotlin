@@ -1,5 +1,6 @@
 package com.andreas.keuangankuplus.presentation.ui.dialog
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.andreas.keuangankuplus.domain.model.GoalModel
 import com.andreas.keuangankuplus.presentation.ui.component.form.InputDateTime
 import com.andreas.keuangankuplus.presentation.ui.component.form.InputNumericField
 import com.andreas.keuangankuplus.presentation.ui.component.form.InputTextField
@@ -34,7 +36,7 @@ import com.andreas.keuangankuplus.presentation.ui.component.form.InputTextField
 @Composable
 fun AddGoalDialog(
     onDismiss: () -> Unit,
-    onSave: (String) -> Unit
+    onSave: (GoalModel) -> Unit
 ) {
     var goalName by remember { mutableStateOf("") }
     var target by remember { mutableDoubleStateOf(0.0) }
@@ -100,10 +102,25 @@ fun AddGoalDialog(
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(onClick = {
                     if (goalName.isNotBlank()) {
-                        onSave(goalName)
+                        val now = System.currentTimeMillis()
+                        val finalTarget = if (target != 0.0) target.toLong() else null
+                        val finalDeadline = dateTime.toLongOrNull()
+                        val goal = GoalModel(
+                            id = 0,
+                            name = goalName,
+                            target = finalTarget,
+                            collected = 0L,
+                            achieved = false,
+                            deadline = finalDeadline,
+                            createdAt = now,
+                            updatedAt = now
+                        )
+                        Log.d("AddGoalDialog.kt", "add new data$goal")
+                        onSave(goal)
                     }
+
                 }) {
-                    Text("Simpan")
+                    Text("Save")
                 }
             }
         }

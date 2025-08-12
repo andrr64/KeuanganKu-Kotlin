@@ -9,8 +9,8 @@ data class GoalEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String,
-    val target: Long,
-    val collected: Long,
+    val target: Long?, // nullable
+    val collected: Long, // default 0
     val achieved: Boolean,
     val deadline: Long?,   // nullable
     val createdAt: Long,

@@ -79,12 +79,11 @@ fun GoalScreen(
             } else list
         }
 
-    // Dialog tambah goal
     if (showAddGoalDialog) {
         AddGoalDialog(
             onDismiss = { showAddGoalDialog = false },
-            onSave = { name ->
-                viewModel.addGoal(name)
+            onSave = { newGoal ->
+                viewModel.addGoal(newGoal)
                 showAddGoalDialog = false
             }
         )

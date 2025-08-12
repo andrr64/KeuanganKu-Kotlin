@@ -38,27 +38,11 @@ class GoalViewModel @Inject constructor(
         }
     }
 
-    fun addGoal(name: String) {
+    fun addGoal(goal: GoalModel) {
         viewModelScope.launch {
             try {
-                val now = System.currentTimeMillis()
-                val randomTarget = (1_000_000L..10_000_000L).random()
-                val randomDeadline = listOf<Long?>(null, now + 7L * 24 * 60 * 60 * 1000).random()
-
-                val goalBaru = GoalModel(
-                    id = 0,
-                    name = name,
-                    target = randomTarget,
-                    collected = 0L,
-                    achieved = false,
-                    deadline = randomDeadline,
-                    createdAt = now,
-                    updatedAt = now
-                )
-
-                insertGoalUseCase(goalBaru)
+                insertGoalUseCase(goal)
                 _uiEvent.emit(UiEvent.SaveResult(true, "Goal berhasil disimpan"))
-
             } catch (e: Exception) {
                 _uiEvent.emit(
                     UiEvent.SaveResult(
