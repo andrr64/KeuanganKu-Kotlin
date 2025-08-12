@@ -10,11 +10,11 @@ configurations.all {
     exclude(group = "com.intellij", module = "annotations")
 }
 android {
-    namespace = "com.andreas.keuangankuplus"
+    namespace = "com.andreas.keuanganku"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.andreas.keuangankuplus"
+        applicationId = "com.andreas.keuanganku"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
