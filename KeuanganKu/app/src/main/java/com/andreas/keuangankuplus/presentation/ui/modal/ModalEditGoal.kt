@@ -27,7 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.andreas.keuangankuplus.domain.model.GoalModel
-import com.andreas.keuangankuplus.presentation.ui.component.input.InputDateTime
+import com.andreas.keuangankuplus.presentation.ui.component.input.InputDate
 import com.andreas.keuangankuplus.presentation.ui.component.input.InputNumericField
 import com.andreas.keuangankuplus.presentation.ui.component.input.InputTextField
 import com.andreas.keuangankuplus.util.DateTimeUtils
@@ -37,15 +37,15 @@ import com.andreas.keuangankuplus.util.DateTimeUtils
 fun ModalEditGoal(
     goal: GoalModel,
     onDismiss: () -> Unit,
-    onSave: (GoalModel) -> Unit,
+    onSave: (oldGoal: GoalModel, name: String, target: Double, date: String) -> Unit,
     onDelete:  () -> Unit,
 ) {
     var goalName by remember(goal.id) { mutableStateOf(goal.name) }
     var target by remember(goal.id) {
         mutableDoubleStateOf(goal.target?.toDouble() ?: 0.0)
     }
-    var dateTime by remember(goal.id) {
-        mutableStateOf(DateTimeUtils.formatTimestamp(goal.deadline))
+    var deadline by remember(goal.id) {
+        mutableStateOf(DateTimeUtils.formatTimestampToDateOnly(goal.deadline))
     }
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -80,17 +80,16 @@ fun ModalEditGoal(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                InputDateTime(
-                    value = dateTime,
+                InputDate(
+                    value = deadline,
                     onValueChange = { date ->
-                        dateTime = date
-                        Log.d("Datetime ", date)
+                        deadline = date
                     },
                     label = "Deadline (Optional)",
                     modifier = Modifier.weight(0.7f)
                 )
                 Button(
-                    onClick = { dateTime = "" },
+                    onClick = { deadline = "" },
                     modifier = Modifier
                         .weight(0.3f)
                         .padding(start = 8.dp)
@@ -136,25 +135,8 @@ fun ModalEditGoal(
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(onClick = {
                         if (goalName.isNotBlank()) {
-                            val now = System.currentTimeMillis()
-                            val finalTarget = if (target != 0.0) target.toLong() else null
-
-                            val finalDeadline: Long? = if (dateTime.isNotEmpty()) {
-                                DateTimeUtils.parseToTimestamp(dateTime)
-                            } else {
-                                null
-                            }
-
-                            val updatedGoal = goal.copy(
-                                name = goalName,
-                                target = finalTarget,
-                                deadline = finalDeadline,
-                                updatedAt = now
-                            )
-
-                            Log.d("Datetime", "Updating goal: $dateTime")
-                            Log.d("ModalEditGoal", "Updating goal: $updatedGoal")
-                            onSave(updatedGoal)
+                            onSave(goal, goalName, target, deadline)
+                            Log.d("ModalEditGoal.kt", "Send updated data : $goalName, $target, $deadline")
                         }
                     }) {
                         Text("Update Goal")

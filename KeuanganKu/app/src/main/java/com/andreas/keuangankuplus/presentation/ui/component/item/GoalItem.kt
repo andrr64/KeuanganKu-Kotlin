@@ -32,7 +32,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.andreas.keuangankuplus.domain.model.GoalModel
-import com.andreas.keuangankuplus.util.formatToCurrency
+import com.andreas.keuangankuplus.util.DateTimeUtils
+import com.andreas.keuangankuplus.util.NumberFormat
 import kotlin.math.roundToInt
 
 @Composable
@@ -41,11 +42,8 @@ fun GoalItem(
     whenClicked: () -> Unit,
     whenCheckPressed: () -> Unit
 ) {
-    val progressColor = if (goal.achieved) {
-        Color(0xFF4CAF50) // hijau lebih soft
-    } else {
-        Color(0xFFE53935) // merah agak soft
-    }
+    val progressColor = if (goal.achieved) Color(0xFF4CAF50) else Color(0xFFE53935)
+
     Card(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
@@ -60,76 +58,105 @@ fun GoalItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(14.dp)
+                .padding(horizontal = 16.dp, vertical = 14.dp) // sedikit horizontal padding lebih lega
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(14.dp)
-                            .background(progressColor, shape = CircleShape)
-                    )
-
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Text(
-                        text = goal.name,
-                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                Column(
+                    modifier = Modifier.weight(0.75f)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(14.dp)
+                                .background(progressColor, shape = CircleShape)
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(
+                            text = goal.name,
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            ),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    if (goal.deadline != null) {
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Text(
+                            text = DateTimeUtils.formatTimestampToLongStringDate(goal.deadline),
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                fontWeight = FontWeight.Normal,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            ),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 }
 
-                // Status + checklist
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(0.25f),
+                    horizontalArrangement = Arrangement.End
+                ) {
                     Text(
                         text = if (goal.achieved) "Tercapai" else "Belum",
                         color = progressColor,
-                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium)
+                        style = MaterialTheme.typography.labelMedium.copy(
+                            fontWeight = FontWeight.Medium
+                        )
                     )
-                    Spacer(Modifier.width(6.dp))
+                    Spacer(Modifier.width(8.dp))
                     Checkbox(
                         checked = goal.achieved,
-                        onCheckedChange = { whenCheckPressed() }
+                        onCheckedChange = { whenCheckPressed() },
+                        colors = androidx.compose.material3.CheckboxDefaults.colors(
+                            checkedColor = progressColor,
+                            uncheckedColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     )
                 }
             }
 
-            if (!goal.achieved) {
-                goal.target?.let { targetValue ->
-                    Spacer(Modifier.height(12.dp))
+            if (!goal.achieved && goal.target != null) {
+                Spacer(Modifier.height(16.dp))
 
-                    val progress = if (targetValue > 0) {
-                        (goal.collected.toFloat() / targetValue.toFloat()).coerceIn(0f, 1f)
-                    } else 0f
-                    val percentage = (progress * 100).roundToInt()
+                val progress = if (goal.target > 0) {
+                    (goal.collected.toFloat() / goal.target.toFloat()).coerceIn(0f, 1f)
+                } else 0f
+                val percentage = (progress * 100).roundToInt()
 
-                    LinearProgressIndicator(
-                        progress = { progress },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(7.dp)
-                            .clip(RoundedCornerShape(4.dp)),
-                        color = progressColor,
-                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
-                        strokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
+                LinearProgressIndicator(
+                    progress = progress,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(8.dp)
+                        .clip(RoundedCornerShape(4.dp)),
+                    color = progressColor,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                    strokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
+                )
+
+                Spacer(Modifier.height(8.dp))
+
+                Text(
+                    text = "$percentage% • ${NumberFormat.formatToCurrency(goal.collected)} / ${
+                        NumberFormat.formatToCurrency(goal.target)
+                    }",
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontWeight = FontWeight.Medium
                     )
-
-                    Spacer(Modifier.height(6.dp))
-
-                    Text(
-                        text = "$percentage% • ${formatToCurrency(goal.collected)} / ${
-                            formatToCurrency(
-                                goal.target
-                            )
-                        }",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+                )
             }
         }
     }

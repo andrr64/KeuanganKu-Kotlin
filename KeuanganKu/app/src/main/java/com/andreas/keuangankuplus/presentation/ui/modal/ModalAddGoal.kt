@@ -27,7 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.andreas.keuangankuplus.domain.model.GoalModel
-import com.andreas.keuangankuplus.presentation.ui.component.input.InputDateTime
+import com.andreas.keuangankuplus.presentation.ui.component.input.InputDate
 import com.andreas.keuangankuplus.presentation.ui.component.input.InputNumericField
 import com.andreas.keuangankuplus.presentation.ui.component.input.InputTextField
 
@@ -35,11 +35,11 @@ import com.andreas.keuangankuplus.presentation.ui.component.input.InputTextField
 @Composable
 fun ModalAddGoal(
     onDismiss: () -> Unit,
-    onSave: (GoalModel) -> Unit
+    onSave: (name :String, target: Double, date: String) -> Unit
 ) {
     var goalName by remember { mutableStateOf("") }
     var target by remember { mutableDoubleStateOf(0.0) }
-    var dateTime by remember { mutableStateOf("") }
+    var date by remember { mutableStateOf("") }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -74,14 +74,14 @@ fun ModalAddGoal(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                InputDateTime(
-                    value = dateTime,
-                    onValueChange = { dateTime = it },
+                InputDate(
+                    value = date,
+                    onValueChange = { date = it },
                     label = "Deadline (Optional)",
                     modifier = Modifier.weight(0.7f)
                 )
                 Button(
-                    onClick = { dateTime = "" },
+                    onClick = { date = "" },
                     modifier = Modifier
                         .weight(0.3f)
                         .padding(start = 8.dp)
@@ -116,21 +116,8 @@ fun ModalAddGoal(
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(onClick = {
                     if (goalName.isNotBlank()) {
-                        val now = System.currentTimeMillis()
-                        val finalTarget = if (target != 0.0) target.toLong() else null
-                        val finalDeadline = dateTime.toLongOrNull()
-                        val goal = GoalModel(
-                            id = 0,
-                            name = goalName,
-                            target = finalTarget,
-                            collected = 0L,
-                            achieved = false,
-                            deadline = finalDeadline,
-                            createdAt = now,
-                            updatedAt = now
-                        )
-                        Log.d("AddGoalDialog.kt", "add new data $goal")
-                        onSave(goal)
+                        onSave(goalName, target, date)
+                        onDismiss()
                     }
                 }) {
                     Text("Save Goal")

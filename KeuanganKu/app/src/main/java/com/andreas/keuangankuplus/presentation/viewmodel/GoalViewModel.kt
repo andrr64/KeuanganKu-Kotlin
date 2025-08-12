@@ -3,12 +3,14 @@ package com.andreas.keuangankuplus.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.andreas.keuangankuplus.data.local.GoalEntity
 import com.andreas.keuangankuplus.domain.model.GoalModel
 import com.andreas.keuangankuplus.domain.usecase.DeleteGoalUseCase
 import com.andreas.keuangankuplus.domain.usecase.GetAllGoalsAsFlowUseCase
 import com.andreas.keuangankuplus.domain.usecase.InsertGoalUseCase
 import com.andreas.keuangankuplus.domain.usecase.ToggleGoalAchievedUseCase
 import com.andreas.keuangankuplus.domain.usecase.UpdateGoalUseCase
+import com.andreas.keuangankuplus.util.DateTimeUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,9 +48,22 @@ class GoalViewModel @Inject constructor(
         }
     }
 
-    fun addGoal(goal: GoalModel) {
+    fun addGoal(name: String, target: Double, date: String) {
         viewModelScope.launch {
             try {
+                val now = System.currentTimeMillis()
+                val finalTarget = if (target != 0.0) target.toLong() else null
+                val finalDeadline = DateTimeUtils.parseDateOnlyToTimestamp(date)
+                val goal = GoalModel(
+                    id = 0,
+                    name = name,
+                    target = finalTarget,
+                    collected = 0L,
+                    achieved = false,
+                    deadline = finalDeadline,
+                    createdAt = now,
+                    updatedAt = now
+                )
                 insertGoalUseCase(goal)
                 _uiEvent.emit(UiEvent.SaveResult(true, "Goal berhasil disimpan"))
                 Log.d("GoalViewModel", "Goal added: $goal")
@@ -64,9 +79,18 @@ class GoalViewModel @Inject constructor(
         }
     }
 
-    fun updateGoal(goal: GoalModel) {
+    fun updateGoal(oldGoal: GoalModel, name: String, target: Double, date: String) {
         viewModelScope.launch {
             try {
+                val now = System.currentTimeMillis()
+                val finalTarget = if (target != 0.0) target.toLong() else null
+                val finalDeadline = DateTimeUtils.parseDateOnlyToTimestamp(date)
+                val goal = oldGoal.copy(
+                    name = name,
+                    target = finalTarget,
+                    deadline = finalDeadline,
+                    updatedAt = now
+                )
                 updateGoalUseCase(goal)
                 _uiEvent.emit(UiEvent.SaveResult(true, "Goal berhasil diperbarui"))
                 Log.d("GoalViewModel", "Goal updated: $goal")

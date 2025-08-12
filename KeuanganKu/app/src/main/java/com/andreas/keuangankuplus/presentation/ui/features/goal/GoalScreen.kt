@@ -88,9 +88,8 @@ fun GoalScreen(
     if (showAddGoalDialog) {
         ModalAddGoal(
             onDismiss = { showAddGoalDialog = false },
-            onSave = { newGoal ->
-                viewModel.addGoal(newGoal)
-                showAddGoalDialog = false
+            onSave = { name, target, date ->
+                viewModel.addGoal(name, target, date)
             }
         )
     }
@@ -113,8 +112,8 @@ fun GoalScreen(
         ModalEditGoal(
             goal = selectedGoalToEdit!!, // sudah dicek tidak null
             onDismiss = { selectedGoalToEdit = null },
-            onSave = { updatedGoal ->
-                viewModel.updateGoal(updatedGoal)
+            onSave = {oldGoal, name, target, date ->
+                viewModel.updateGoal(oldGoal, name, target, date)
                 selectedGoalToEdit = null
             },
             onDelete = {
@@ -122,7 +121,6 @@ fun GoalScreen(
             }
         )
     }
-
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -172,15 +170,6 @@ fun GoalScreen(
                 Spacer(Modifier.height(16.dp))
             }
 
-            item {
-                Text(
-                    text = "List Goal",
-                    fontWeight = FontWeight.SemiBold,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = if (isDarkTheme) Color.White else Color.Black
-                )
-            }
-
             if (filteredGoals.isEmpty()) {
                 item {
                     Box(
@@ -208,19 +197,9 @@ fun GoalScreen(
                     )
                 }
             }
-
             item {
-                Spacer(Modifier.height(45.dp))
-                Text(
-                    text = "The end.",
-                    style = MaterialTheme.typography.bodySmall,
-                    textAlign = TextAlign.Center,
-                    color = if (isDarkTheme) Color.Gray else Color.DarkGray,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(Modifier.height(45.dp))
+                Spacer(Modifier.height(90.dp))
             }
-
         }
     }
 }
