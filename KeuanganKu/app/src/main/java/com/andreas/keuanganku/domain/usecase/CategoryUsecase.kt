@@ -1,6 +1,5 @@
 package com.andreas.keuanganku.domain.usecase
 
-import com.andreas.keuanganku.data.local.entity.CategoryEntity
 import com.andreas.keuanganku.domain.model.CategoryModel
 import com.andreas.keuanganku.domain.repository.CategoryRepository
 import kotlinx.coroutines.flow.Flow

@@ -8,6 +8,7 @@ import java.util.Locale
 object DateTimeUtils {
     @SuppressLint("ConstantLocale")
     private val dateTimeFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+
     @SuppressLint("ConstantLocale")
     private val dateOnlyFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 

@@ -4,7 +4,6 @@ import java.text.NumberFormat
 import java.util.Locale
 
 
-
 object NumberFormat {
     fun formatToCurrency(value: Long, locale: Locale = Locale("in", "ID")): String {
         val formatter = NumberFormat.getNumberInstance(locale)

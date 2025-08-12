@@ -2,9 +2,7 @@ package com.andreas.keuanganku.data.repository
 
 import com.andreas.keuanganku.data.local.dao.CategoryDao
 import com.andreas.keuanganku.data.local.entity.CategoryEntity
-import com.andreas.keuanganku.data.local.entity.GoalEntity
 import com.andreas.keuanganku.domain.model.CategoryModel
-import com.andreas.keuanganku.domain.model.GoalModel
 import com.andreas.keuanganku.domain.repository.CategoryRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

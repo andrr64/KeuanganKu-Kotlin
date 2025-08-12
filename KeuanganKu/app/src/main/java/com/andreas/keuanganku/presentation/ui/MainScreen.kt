@@ -50,6 +50,7 @@ fun MainScreen(
     val pagerState = rememberPagerState(initialPage = 0) { pages.size }
     val coroutineScope = rememberCoroutineScope()
 
+
     Scaffold(
         bottomBar = {
             BottomBar(

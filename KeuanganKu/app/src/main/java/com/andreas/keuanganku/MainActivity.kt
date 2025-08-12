@@ -7,7 +7,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.navigation.compose.rememberNavController
-import com.andreas.keuanganku.presentation.ui.MainScreen
 import com.andreas.keuanganku.presentation.ui.navigation.AppNavGraph
 import com.andreas.keuanganku.presentation.ui.theme.KeuanganKuTheme
 import dagger.hilt.android.AndroidEntryPoint

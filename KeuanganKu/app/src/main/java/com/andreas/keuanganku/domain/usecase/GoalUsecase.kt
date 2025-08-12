@@ -17,7 +17,7 @@ class GetAllGoalsUseCase @Inject constructor(private val repository: GoalReposit
     suspend operator fun invoke(): List<GoalModel> = repository.getAllGoals()
 }
 
-class GetAllGoalsAsFlowUseCase @Inject constructor(private val repository: GoalRepository){
+class GetAllGoalsAsFlowUseCase @Inject constructor(private val repository: GoalRepository) {
     operator fun invoke(): Flow<List<GoalModel>> = repository.getAllGoalsFlow()
 }
 

@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TransactionViewModel @Inject constructor(
     private val categoryUseCase: CategoryUseCase
-): ViewModel() {
+) : ViewModel() {
     private val _categories = MutableStateFlow<List<CategoryModel>>(emptyList())
     val categories: StateFlow<List<CategoryModel>> get() = _categories
 
@@ -29,7 +29,12 @@ class TransactionViewModel @Inject constructor(
                     _categories.value = list
                 }
             } catch (e: Exception) {
-                _uiEvent.emit(UiEvent.SaveResult(false, "Gagal memuat kategori: ${e.message ?: "Tidak diketahui"}"))
+                _uiEvent.emit(
+                    UiEvent.SaveResult(
+                        false,
+                        "Gagal memuat kategori: ${e.message ?: "Tidak diketahui"}"
+                    )
+                )
             }
         }
     }
@@ -39,14 +44,19 @@ class TransactionViewModel @Inject constructor(
             try {
                 val data = CategoryModel(
                     id = 0,
-                    type= type,
+                    type = type,
                     name = name,
                     color = color
                 )
                 categoryUseCase.insertCategory(data)
                 _uiEvent.emit(UiEvent.SaveResult(true, "Kategori berhasil ditambahkan"))
             } catch (e: Exception) {
-                _uiEvent.emit(UiEvent.SaveResult(false, "Gagal menambahkan kategori: ${e.message ?: "Tidak diketahui"}"))
+                _uiEvent.emit(
+                    UiEvent.SaveResult(
+                        false,
+                        "Gagal menambahkan kategori: ${e.message ?: "Tidak diketahui"}"
+                    )
+                )
             }
         }
     }
@@ -57,7 +67,12 @@ class TransactionViewModel @Inject constructor(
                 categoryUseCase.updateCategory(category)
                 _uiEvent.emit(UiEvent.SaveResult(true, "Kategori berhasil diperbarui"))
             } catch (e: Exception) {
-                _uiEvent.emit(UiEvent.SaveResult(false, "Gagal memperbarui kategori: ${e.message ?: "Tidak diketahui"}"))
+                _uiEvent.emit(
+                    UiEvent.SaveResult(
+                        false,
+                        "Gagal memperbarui kategori: ${e.message ?: "Tidak diketahui"}"
+                    )
+                )
             }
         }
     }
@@ -68,7 +83,12 @@ class TransactionViewModel @Inject constructor(
                 categoryUseCase.deleteCategory(category)
                 _uiEvent.emit(UiEvent.SaveResult(true, "Kategori berhasil dihapus"))
             } catch (e: Exception) {
-                _uiEvent.emit(UiEvent.SaveResult(false, "Gagal menghapus kategori: ${e.message ?: "Tidak diketahui"}"))
+                _uiEvent.emit(
+                    UiEvent.SaveResult(
+                        false,
+                        "Gagal menghapus kategori: ${e.message ?: "Tidak diketahui"}"
+                    )
+                )
             }
         }
     }
