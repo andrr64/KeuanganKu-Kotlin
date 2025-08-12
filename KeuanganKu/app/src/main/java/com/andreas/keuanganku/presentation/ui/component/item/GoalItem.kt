@@ -58,7 +58,10 @@ fun GoalItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 14.dp) // sedikit horizontal padding lebih lega
+                .padding(
+                    horizontal = 16.dp,
+                    vertical = 14.dp
+                ) // sedikit horizontal padding lebih lega
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),

@@ -84,42 +84,6 @@ fun GoalScreen(
             } else list
         }
 
-    if (showAddGoalDialog) {
-        ModalAddGoal(
-            onDismiss = { showAddGoalDialog = false },
-            onSave = { name, target, date ->
-                viewModel.addGoal(name, target, date)
-            }
-        )
-    }
-    if (showConfirmDelete){
-        ConfirmationDialog(
-            showDialog = true,
-            onConfirm = {
-                selectedGoalToEdit?.let {
-                    viewModel.deleteGoal(it.id)
-                }
-                selectedGoalToEdit = null
-            },
-            onDismiss = {
-                showConfirmDelete = false
-            },
-            message = "Apakah kamu yakin ingin menghapus data ini?"
-        )
-    }
-    if (selectedGoalToEdit != null) {
-        ModalEditGoal(
-            goal = selectedGoalToEdit!!, // sudah dicek tidak null
-            onDismiss = { selectedGoalToEdit = null },
-            onSave = {oldGoal, name, target, date ->
-                viewModel.updateGoal(oldGoal, name, target, date)
-                selectedGoalToEdit = null
-            },
-            onDelete = {
-                showConfirmDelete = true
-            }
-        )
-    }
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -200,5 +164,42 @@ fun GoalScreen(
                 Spacer(Modifier.height(90.dp))
             }
         }
+    }
+
+    if (showAddGoalDialog) {
+        ModalAddGoal(
+            onDismiss = { showAddGoalDialog = false },
+            onSave = { name, target, date ->
+                viewModel.addGoal(name, target, date)
+            }
+        )
+    }
+    if (showConfirmDelete) {
+        ConfirmationDialog(
+            showDialog = true,
+            onConfirm = {
+                selectedGoalToEdit?.let {
+                    viewModel.deleteGoal(it.id)
+                }
+                selectedGoalToEdit = null
+            },
+            onDismiss = {
+                showConfirmDelete = false
+            },
+            message = "Apakah kamu yakin ingin menghapus data ini?"
+        )
+    }
+    if (selectedGoalToEdit != null) {
+        ModalEditGoal(
+            goal = selectedGoalToEdit!!, // sudah dicek tidak null
+            onDismiss = { selectedGoalToEdit = null },
+            onSave = { oldGoal, name, target, date ->
+                viewModel.updateGoal(oldGoal, name, target, date)
+                selectedGoalToEdit = null
+            },
+            onDelete = {
+                showConfirmDelete = true
+            }
+        )
     }
 }

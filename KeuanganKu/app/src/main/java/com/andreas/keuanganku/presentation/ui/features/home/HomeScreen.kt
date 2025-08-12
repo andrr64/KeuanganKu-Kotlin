@@ -79,6 +79,7 @@ fun DonutChartLegend(
         }
     }
 }
+
 @Composable
 fun DonutChart(
     segments: List<DonutSegment>,
@@ -172,7 +173,7 @@ fun HomeScreen(
     onThemeChange: () -> Unit
 ) {
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = colorScheme.background
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier

@@ -38,7 +38,7 @@ fun ModalEditGoal(
     goal: GoalModel,
     onDismiss: () -> Unit,
     onSave: (oldGoal: GoalModel, name: String, target: Double, date: String) -> Unit,
-    onDelete:  () -> Unit,
+    onDelete: () -> Unit,
 ) {
     var goalName by remember(goal.id) { mutableStateOf(goal.name) }
     var target by remember(goal.id) {
@@ -136,13 +136,17 @@ fun ModalEditGoal(
                     Button(onClick = {
                         if (goalName.isNotBlank()) {
                             onSave(goal, goalName, target, deadline)
-                            Log.d("ModalEditGoal.kt", "Send updated data : $goalName, $target, $deadline")
+                            Log.d(
+                                "ModalEditGoal.kt",
+                                "Send updated data : $goalName, $target, $deadline"
+                            )
                         }
                     }) {
                         Text("Update Goal")
                     }
                 }
             }
+            Spacer(modifier = Modifier.height(30.dp))
         }
     }
 }

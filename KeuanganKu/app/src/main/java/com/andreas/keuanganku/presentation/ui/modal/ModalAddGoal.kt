@@ -33,7 +33,7 @@ import com.andreas.keuanganku.presentation.ui.component.input.InputTextField
 @Composable
 fun ModalAddGoal(
     onDismiss: () -> Unit,
-    onSave: (name :String, target: Double, date: String) -> Unit
+    onSave: (name: String, target: Double, date: String) -> Unit
 ) {
     var goalName by remember { mutableStateOf("") }
     var target by remember { mutableDoubleStateOf(0.0) }
@@ -122,5 +122,6 @@ fun ModalAddGoal(
                 }
             }
         }
+        Spacer(modifier = Modifier.height(30.dp))
     }
 }
