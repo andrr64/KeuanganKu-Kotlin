@@ -38,6 +38,11 @@ fun SearchField(
         singleLine = true,
         shape = RoundedCornerShape(10.dp),
         modifier = Modifier.fillMaxWidth(),
-        colors = TextFieldDefaults.colors()
+        colors = TextFieldDefaults.colors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent
+        )
     )
+
 }

@@ -1,5 +1,6 @@
 package com.andreas.keuangankuplus.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andreas.keuangankuplus.domain.model.GoalModel
@@ -72,6 +73,7 @@ class GoalViewModel @Inject constructor(
                         "Gagal menyimpan goal: ${e.message ?: "Kesalahan"}"
                     )
                 )
+                Log.e("Exception", e.message.toString())
             }
         }
     }

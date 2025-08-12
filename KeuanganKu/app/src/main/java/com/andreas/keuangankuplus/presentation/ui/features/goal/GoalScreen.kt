@@ -90,8 +90,7 @@ fun GoalScreen(
             onSave = { name ->
                 viewModel.addGoal(name)
                 showAddGoalDialog = false
-            },
-            isDarkTheme = isDarkTheme
+            }
         )
     }
 

@@ -2,9 +2,8 @@ package com.andreas.keuangankuplus.presentation.ui.component.form
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,19 +15,15 @@ fun InputTextField(
     onValueChange: (String) -> Unit,
     label: String
 ) {
-    OutlinedTextField(
+    TextField(
         value = value,
         onValueChange = onValueChange,
         label = { Text(label) },
         singleLine = true,
         colors = TextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.background,
-            unfocusedContainerColor = MaterialTheme.colorScheme.background,
-            focusedTextColor = MaterialTheme.colorScheme.onBackground,
-            unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
-            cursorColor = MaterialTheme.colorScheme.primary,
-            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-            unfocusedIndicatorColor = MaterialTheme.colorScheme.outline
+            focusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent,
+            unfocusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent,
+            disabledIndicatorColor = androidx.compose.ui.graphics.Color.Transparent
         ),
         shape = RoundedCornerShape(6.dp),
         modifier = Modifier.fillMaxWidth()
