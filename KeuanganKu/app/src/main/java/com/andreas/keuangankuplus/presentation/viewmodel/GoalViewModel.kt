@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andreas.keuangankuplus.domain.model.GoalModel
 import com.andreas.keuangankuplus.domain.usecase.DeleteGoalUseCase
-import com.andreas.keuangankuplus.domain.usecase.GetAllGoalsUseCase
+import com.andreas.keuangankuplus.domain.usecase.GetAllGoalsAsFlowUseCase
 import com.andreas.keuangankuplus.domain.usecase.InsertGoalUseCase
 import com.andreas.keuangankuplus.domain.usecase.UpdateGoalUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,29 +19,21 @@ import javax.inject.Inject
 @HiltViewModel
 class GoalViewModel @Inject constructor(
     private val insertGoalUseCase: InsertGoalUseCase,
-    private val getAllGoalsUseCase: GetAllGoalsUseCase,
+    private val getAllGoalsUseCase: GetAllGoalsAsFlowUseCase,
     private val updateGoalUseCase: UpdateGoalUseCase,
     private val deleteGoalUseCase: DeleteGoalUseCase
 ) : ViewModel() {
 
     private val _goals = MutableStateFlow<List<GoalModel>>(emptyList())
+    val goals: StateFlow<List<GoalModel>> get() = _goals
 
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
 
-    val goals: StateFlow<List<GoalModel>> get() = _goals
-
-    fun loadGoals() {
+    init {
         viewModelScope.launch {
-            try {
-                _goals.value = getAllGoalsUseCase()
-            } catch (e: Exception) {
-                _uiEvent.emit(
-                    UiEvent.SaveResult(
-                        false,
-                        "Gagal memuat goals: ${e.message ?: "Kesalahan"}"
-                    )
-                )
+            getAllGoalsUseCase().collect { goalsList ->
+                _goals.value = goalsList
             }
         }
     }
@@ -63,9 +55,10 @@ class GoalViewModel @Inject constructor(
                     createdAt = now,
                     updatedAt = now
                 )
-                insertGoalUseCase(goalBaru) // suspend
+
+                insertGoalUseCase(goalBaru)
                 _uiEvent.emit(UiEvent.SaveResult(true, "Goal berhasil disimpan"))
-                loadGoals()
+
             } catch (e: Exception) {
                 _uiEvent.emit(
                     UiEvent.SaveResult(
@@ -73,7 +66,7 @@ class GoalViewModel @Inject constructor(
                         "Gagal menyimpan goal: ${e.message ?: "Kesalahan"}"
                     )
                 )
-                Log.e("Exception", e.message.toString())
+                Log.e("GoalViewModel", e.message.toString())
             }
         }
     }
@@ -81,14 +74,12 @@ class GoalViewModel @Inject constructor(
     fun updateGoal(goal: GoalModel) {
         viewModelScope.launch {
             updateGoalUseCase(goal)
-            loadGoals()
         }
     }
 
     fun deleteGoal(id: Int) {
         viewModelScope.launch {
             deleteGoalUseCase(id)
-            loadGoals()
         }
     }
 }

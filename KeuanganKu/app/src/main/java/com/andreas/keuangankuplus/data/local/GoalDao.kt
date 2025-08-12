@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface GoalDao {
@@ -15,6 +16,9 @@ interface GoalDao {
 
     @Query("SELECT * FROM goals")
     suspend fun getAllGoals(): List<GoalEntity>
+
+    @Query("SELECT * FROM goals")
+    fun getAllGoalsFlow(): Flow<List<GoalEntity>>
 
     @Update
     suspend fun update(goal: GoalEntity)

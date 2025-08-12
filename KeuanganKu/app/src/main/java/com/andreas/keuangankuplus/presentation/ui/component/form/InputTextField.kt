@@ -25,7 +25,7 @@ fun InputTextField(
             unfocusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent,
             disabledIndicatorColor = androidx.compose.ui.graphics.Color.Transparent
         ),
-        shape = RoundedCornerShape(6.dp),
+        shape = RoundedCornerShape(16.dp),
         modifier = Modifier.fillMaxWidth()
     )
 }

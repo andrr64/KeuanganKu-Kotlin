@@ -2,6 +2,7 @@ package com.andreas.keuangankuplus.domain.usecase
 
 import com.andreas.keuangankuplus.domain.model.GoalModel
 import com.andreas.keuangankuplus.domain.repository.GoalRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class InsertGoalUseCase @Inject constructor(private val repository: GoalRepository) {
@@ -14,6 +15,10 @@ class GetGoalByIdUseCase @Inject constructor(private val repository: GoalReposit
 
 class GetAllGoalsUseCase @Inject constructor(private val repository: GoalRepository) {
     suspend operator fun invoke(): List<GoalModel> = repository.getAllGoals()
+}
+
+class GetAllGoalsAsFlowUseCase @Inject constructor(private val repository: GoalRepository){
+    operator fun invoke(): Flow<List<GoalModel>> = repository.getAllGoalsFlow()
 }
 
 class UpdateGoalUseCase @Inject constructor(private val repository: GoalRepository) {

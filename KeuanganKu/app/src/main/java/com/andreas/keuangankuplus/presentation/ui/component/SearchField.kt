@@ -7,8 +7,6 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -36,7 +34,7 @@ fun SearchField(
             }
         },
         singleLine = true,
-        shape = RoundedCornerShape(10.dp),
+        shape = RoundedCornerShape(24.dp),
         modifier = Modifier.fillMaxWidth(),
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,

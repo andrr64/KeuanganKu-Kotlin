@@ -23,6 +23,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,16 +45,24 @@ fun GoalScreen(
 ) {
     val viewModel: GoalViewModel = hiltViewModel()
     val goals by viewModel.goals.collectAsState()
-    var showAddGoalDialog by remember { mutableStateOf(false) }
+
+    var showAddGoalDialog by rememberSaveable { mutableStateOf(false) }
     var filterTercapai by remember { mutableStateOf("all") }
     var filterJumlah by remember { mutableStateOf("all") }
     var searchKeyword by remember { mutableStateOf("") }
 
-    // useEffect([])
+    val context = LocalContext.current
+
+    // Listen UI event
     LaunchedEffect(Unit) {
-        viewModel.loadGoals()
+        viewModel.uiEvent.collect { event ->
+            if (event is UiEvent.SaveResult) {
+                Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
+    // Filter goals
     val filteredGoals = goals
         .filter {
             when (filterTercapai) {
@@ -62,9 +71,7 @@ fun GoalScreen(
                 else -> true
             }
         }
-        .filter {
-            it.name.contains(searchKeyword, ignoreCase = true)
-        }
+        .filter { it.name.contains(searchKeyword, ignoreCase = true) }
         .let { list ->
             if (filterJumlah != "all") {
                 val jumlah = filterJumlah.toIntOrNull() ?: list.size
@@ -72,18 +79,7 @@ fun GoalScreen(
             } else list
         }
 
-    val context = LocalContext.current
-
-    LaunchedEffect(key1 = viewModel.uiEvent) {
-        viewModel.uiEvent.collect { event ->
-            when (event) {
-                is UiEvent.SaveResult -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
+    // Dialog tambah goal
     if (showAddGoalDialog) {
         AddGoalDialog(
             onDismiss = { showAddGoalDialog = false },
@@ -96,9 +92,7 @@ fun GoalScreen(
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { showAddGoalDialog = true }
-            ) {
+            FloatingActionButton(onClick = { showAddGoalDialog = true }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Tambah Goal")
             }
         },
@@ -125,7 +119,6 @@ fun GoalScreen(
                     color = if (isDarkTheme) Color.Gray else Color.DarkGray
                 )
                 Spacer(Modifier.height(16.dp))
-
                 SearchField(
                     value = searchKeyword,
                     placeholder = "Cari goal...",
@@ -158,10 +151,9 @@ fun GoalScreen(
                 }
             } else {
                 items(filteredGoals) { goal ->
-                        GoalItem(goal = goal, isDarkTheme=isDarkTheme, whenCheckPressed = {})
+                    GoalItem(goal = goal, isDarkTheme = isDarkTheme, whenCheckPressed = {})
                 }
             }
         }
     }
-
 }
