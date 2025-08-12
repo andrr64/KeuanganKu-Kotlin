@@ -1,9 +1,10 @@
-package com.andreas.keuanganku.data.local
+package com.andreas.keuanganku.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import com.andreas.keuanganku.data.local.entity.GoalEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

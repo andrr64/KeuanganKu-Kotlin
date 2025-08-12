@@ -1,7 +1,7 @@
 package com.andreas.keuanganku.data.repository
 
-import com.andreas.keuanganku.data.local.GoalDao
-import com.andreas.keuanganku.data.local.GoalEntity
+import com.andreas.keuanganku.data.local.dao.GoalDao
+import com.andreas.keuanganku.data.local.entity.GoalEntity
 import com.andreas.keuanganku.domain.model.GoalModel
 import com.andreas.keuanganku.domain.repository.GoalRepository
 import kotlinx.coroutines.flow.Flow

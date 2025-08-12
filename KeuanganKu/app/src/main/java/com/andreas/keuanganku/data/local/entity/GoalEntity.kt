@@ -1,4 +1,4 @@
-package com.andreas.keuanganku.data.local
+package com.andreas.keuanganku.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

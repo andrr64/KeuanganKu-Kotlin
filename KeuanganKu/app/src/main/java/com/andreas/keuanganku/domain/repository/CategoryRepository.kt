@@ -1,6 +1,6 @@
 package com.andreas.keuanganku.domain.repository
 
-import com.andreas.keuanganku.data.local.CategoryEntity
+import com.andreas.keuanganku.data.local.entity.CategoryEntity
 import kotlinx.coroutines.flow.Flow
 
 interface CategoryRepository {

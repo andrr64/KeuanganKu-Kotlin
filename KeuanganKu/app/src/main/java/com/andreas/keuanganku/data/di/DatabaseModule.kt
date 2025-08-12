@@ -3,7 +3,7 @@ package com.andreas.keuanganku.data.di
 import android.content.Context
 import androidx.room.Room
 import com.andreas.keuanganku.data.local.AppDatabase
-import com.andreas.keuanganku.data.local.GoalDao
+import com.andreas.keuanganku.data.local.dao.GoalDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
