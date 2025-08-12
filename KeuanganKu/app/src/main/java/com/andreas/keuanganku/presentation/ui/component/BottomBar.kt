@@ -10,9 +10,9 @@ import com.andreas.keuanganku.presentation.ui.navigation.BottomNavItem
 @Composable
 fun BottomBar(
     selectedIndex: Int,
+    items: List<BottomNavItem>,
     onItemSelected: (Int) -> Unit
 ) {
-    val items = listOf(BottomNavItem.Home, BottomNavItem.Goal)
     NavigationBar {
         items.forEachIndexed { index, item ->
             NavigationBarItem(

@@ -46,6 +46,7 @@ android {
 
 dependencies {
     implementation(libs.androidx.foundation.layout)
+    implementation(libs.ui.graphics)
     val room_version = "2.7.2"
 
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.36.0")

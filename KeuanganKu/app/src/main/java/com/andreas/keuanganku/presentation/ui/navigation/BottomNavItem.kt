@@ -2,6 +2,7 @@ package com.andreas.keuanganku.presentation.ui.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -20,5 +21,11 @@ sealed class BottomNavItem(
         route = "goal",
         title = "Goal",
         icon = Icons.Default.Star
+    )
+
+    object Transaction : BottomNavItem(
+        route = "transaction",
+        title = "Transaction",
+        icon = Icons.Default.List
     )
 }

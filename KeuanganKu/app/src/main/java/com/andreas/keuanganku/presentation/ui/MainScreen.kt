@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.andreas.keuanganku.presentation.ui.component.BottomBar
 import com.andreas.keuanganku.presentation.ui.features.goal.GoalScreen
 import com.andreas.keuanganku.presentation.ui.features.home.HomeScreen
+import com.andreas.keuanganku.presentation.ui.features.transaction.TransactionScreen
 import com.andreas.keuanganku.presentation.ui.navigation.BottomNavItem
 import com.andreas.keuanganku.presentation.ui.theme.KeuanganKuTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -30,7 +31,6 @@ fun MainScreen() {
     var isDarkTheme by remember { mutableStateOf(true) }
     val systemUiController = rememberSystemUiController()
 
-    // Set warna nav bar & status bar
     val useDarkIcons = !isDarkTheme
     val navBarColor = if (isDarkTheme) Color.Black else Color.White
 
@@ -47,6 +47,7 @@ fun MainScreen() {
 
     val pages = listOf(
         BottomNavItem.Home,
+        BottomNavItem.Transaction,
         BottomNavItem.Goal
     )
     val pagerState = rememberPagerState(initialPage = 0) { pages.size }
@@ -57,6 +58,7 @@ fun MainScreen() {
             bottomBar = {
                 BottomBar(
                     selectedIndex = pagerState.currentPage,
+                    items = pages,
                     onItemSelected = { index ->
                         coroutineScope.launch {
                             pagerState.animateScrollToPage(index)
@@ -79,10 +81,12 @@ fun MainScreen() {
                         isDarkTheme = isDarkTheme,
                         onThemeChange = { isDarkTheme = !isDarkTheme }
                     )
-
                     BottomNavItem.Goal -> GoalScreen(
                         isDarkTheme = isDarkTheme,
                         onThemeChange = { isDarkTheme = !isDarkTheme }
+                    )
+                    BottomNavItem.Transaction -> TransactionScreen(
+                        isDarkTheme = isDarkTheme,
                     )
                 }
             }
