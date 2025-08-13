@@ -109,7 +109,6 @@ class GoalViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 toggleGoalAchievedUseCase(goal)
-                _uiEvent.emit(UiEvent.SaveResult(true, "Status goal berhasil diperbarui"))
                 Log.d("GoalViewModel", "Goal status toggled: $goal")
             } catch (e: Exception) {
                 _uiEvent.emit(
