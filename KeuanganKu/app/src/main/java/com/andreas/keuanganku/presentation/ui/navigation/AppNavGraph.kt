@@ -21,7 +21,7 @@ fun AppNavGraph(navController: NavHostController, isDarkTheme: Boolean) {
         startDestination = "main"
     ) {
         composable(
-            route = "main"
+            route = AppScreenRoute.MAIN
         ) {
             MainScreen(
                 isDarkTheme,
@@ -32,7 +32,7 @@ fun AppNavGraph(navController: NavHostController, isDarkTheme: Boolean) {
         }
 
         composable(
-            route= "add_transaction"
+            route= AppScreenRoute.ADD_TRANSACTION
         ) {
             AddTransactionScreen(
                 navController = navController,

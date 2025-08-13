@@ -28,6 +28,7 @@ import com.andreas.keuanganku.presentation.ui.component.FabOption
 import com.andreas.keuanganku.presentation.ui.component.HeaderWithSearch
 import com.andreas.keuanganku.presentation.ui.modal.ModalAddCategory
 import com.andreas.keuanganku.presentation.ui.modal.ModalAddTransaction
+import com.andreas.keuanganku.presentation.ui.navigation.AppScreenRoute
 import com.andreas.keuanganku.presentation.viewmodel.TransactionViewModel
 import com.andreas.keuanganku.presentation.viewmodel.UiEvent
 
@@ -56,10 +57,7 @@ fun TransactionScreen(
             text = "Add Transaction",
             icon = { Icon(Icons.Default.AccountCircle, null) },
             onClick = {
-                navController.currentBackStackEntry
-                    ?.savedStateHandle
-                    ?.set("transaction_data", "myTransactionObject")
-                navController.navigate("add_transaction")
+                navController.navigate(AppScreenRoute.ADD_TRANSACTION)
             }
         ),
         FabOption(
