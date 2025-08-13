@@ -26,7 +26,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.andreas.keuanganku.domain.model.GoalModel
 import com.andreas.keuanganku.presentation.ui.component.HeaderWithSearch
 import com.andreas.keuanganku.presentation.ui.component.item.GoalItem

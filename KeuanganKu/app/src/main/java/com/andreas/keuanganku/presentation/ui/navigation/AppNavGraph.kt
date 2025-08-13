@@ -1,5 +1,7 @@
 package com.andreas.keuanganku.presentation.ui.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -11,6 +13,7 @@ import com.andreas.keuanganku.presentation.viewmodel.GoalViewModel
 import com.andreas.keuanganku.presentation.viewmodel.TransactionViewModel
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavGraph(navController: NavHostController, isDarkTheme: Boolean) {
     val transactionViewModel: TransactionViewModel = hiltViewModel()
@@ -32,11 +35,12 @@ fun AppNavGraph(navController: NavHostController, isDarkTheme: Boolean) {
         }
 
         composable(
-            route= AppScreenRoute.ADD_TRANSACTION
+            route = AppScreenRoute.ADD_TRANSACTION
         ) {
             AddTransactionScreen(
                 navController = navController,
-                viewModel = transactionViewModel
+                viewModel = transactionViewModel,
+                isDarkTheme = isDarkTheme
             )
         }
     }

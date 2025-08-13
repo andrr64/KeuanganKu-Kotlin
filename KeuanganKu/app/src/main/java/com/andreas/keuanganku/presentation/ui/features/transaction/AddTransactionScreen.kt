@@ -1,5 +1,7 @@
 package com.andreas.keuanganku.presentation.ui.features.transaction
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +24,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -31,17 +34,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.andreas.keuanganku.presentation.ui.component.Header
 import com.andreas.keuanganku.presentation.ui.component.input.InputDateTime
 import com.andreas.keuanganku.presentation.ui.component.input.InputDropdown
 import com.andreas.keuanganku.presentation.ui.component.input.InputNumericField
 import com.andreas.keuanganku.presentation.ui.component.input.InputTextField
 import com.andreas.keuanganku.presentation.viewmodel.TransactionViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTransactionScreen(
     navController: NavController,
-    viewModel: TransactionViewModel
+    viewModel: TransactionViewModel,
+    isDarkTheme: Boolean
 ) {
     var name by remember { mutableStateOf("") }
     var price by remember { mutableDoubleStateOf(0.0) }
@@ -49,10 +55,15 @@ fun AddTransactionScreen(
     var selectedTypeIndex by remember { mutableIntStateOf(0) }
     val typeOptions = listOf("Income", "Expense")
 
+    val categoriesState = viewModel.categories.collectAsState()
+    val allCategories = categoriesState.value
+    val filteredCategories = allCategories.filter { it.type == selectedTypeIndex }
+    var selectedCategoryIndex by remember { mutableIntStateOf(0) }
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Add New Transaction") },
+                title = { Text("") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
@@ -72,20 +83,17 @@ fun AddTransactionScreen(
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            Text(
-                text = "Record a new income or expense.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+            Header(
+                title = "New Transaction",
+                description = "Record a new income or expense.",
+                isDarkTheme = isDarkTheme
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             InputTextField(
                 value = name,
                 onValueChange = { name = it },
                 label = "Transaction Name"
             )
-
             Spacer(modifier = Modifier.height(16.dp))
 
             InputNumericField(
@@ -104,11 +112,25 @@ fun AddTransactionScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Dropdown Jenis
             InputDropdown(
                 label = "Type",
                 options = typeOptions,
                 selectedIndex = selectedTypeIndex,
-                onOptionSelected = { selectedTypeIndex = it }
+                onOptionSelected = {
+                    selectedTypeIndex = it
+                    selectedCategoryIndex = 0 // reset kategori saat jenis berubah
+                }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Dropdown Kategori (filtered sesuai jenis)
+            InputDropdown(
+                label = "Category",
+                options = filteredCategories.map { it.name },
+                selectedIndex = selectedCategoryIndex,
+                onOptionSelected = { selectedCategoryIndex = it }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -124,8 +146,14 @@ fun AddTransactionScreen(
                 Button(
                     onClick = {
                         if (name.isNotBlank() && dateTime.isNotBlank()) {
-                            /// TODO: handle on save transaction
-//                            onSave(name, price, dateTime, selectedTypeIndex)
+                            filteredCategories.getOrNull(selectedCategoryIndex)?.id
+                            selectedTypeIndex // 0 = pemasukan, 1 = pengeluaran
+                            viewModel.addTransaction(
+                                name = name,
+                                price = price,
+                                datetime = dateTime,
+                                categoryId = allCategories[selectedCategoryIndex].id
+                            )
                             navController.popBackStack()
                         }
                     }
@@ -136,3 +164,4 @@ fun AddTransactionScreen(
         }
     }
 }
+

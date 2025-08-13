@@ -5,7 +5,7 @@ import com.andreas.keuanganku.domain.repository.CategoryRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class CategoryUseCase @Inject constructor(
+class CategoryUsecase @Inject constructor(
     private val repository: CategoryRepository
 ) {
     fun getAllCategories(): Flow<List<CategoryModel>> = repository.getAllCategories()

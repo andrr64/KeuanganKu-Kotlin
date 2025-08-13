@@ -39,7 +39,6 @@ fun ExpandableFabMenu(
     Column(
         horizontalAlignment = Alignment.End,
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.padding(16.dp)
     ) {
         // Tampilkan opsi terbalik agar yang terakhir di atas
         options.reversed().forEach { option ->
@@ -63,7 +62,7 @@ fun ExpandableFabMenu(
                             expanded = false
                             option.onClick()
                         },
-                        containerColor = MaterialTheme.colorScheme.secondary,
+                        containerColor = MaterialTheme.colorScheme.surface,
                         modifier = Modifier.size(44.dp)
                     ) {
                         option.icon()
@@ -75,7 +74,6 @@ fun ExpandableFabMenu(
         // FAB Utama (Toggle)
         FloatingActionButton(
             onClick = { expanded = !expanded },
-            containerColor = MaterialTheme.colorScheme.primary
         ) {
             Icon(
                 imageVector = Icons.Default.Add,

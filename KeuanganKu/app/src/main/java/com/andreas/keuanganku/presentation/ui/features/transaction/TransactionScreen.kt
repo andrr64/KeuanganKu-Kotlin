@@ -1,6 +1,5 @@
 package com.andreas.keuanganku.presentation.ui.features.transaction
 
-import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +20,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.andreas.keuanganku.presentation.ui.component.ExpandableFabMenu
 import com.andreas.keuanganku.presentation.ui.component.FabOption
@@ -105,9 +103,9 @@ fun TransactionScreen(
             )
         }
 
-        if (showModalAddTransaction){
+        if (showModalAddTransaction) {
             ModalAddTransaction(
-                onDismiss = {showModalAddTransaction = false},
+                onDismiss = { showModalAddTransaction = false },
                 onSave = { name, price, datetime, categoryId ->
 
                 }

@@ -1,7 +1,11 @@
 package com.andreas.keuanganku.util
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -33,6 +37,16 @@ object DateTimeUtils {
         return try {
             val date = dateOnlyFormatter.parse(dateString)
             date?.time
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun parseISOtoDatetime(dateTimeString: String): LocalDateTime? {
+        return try {
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+            LocalDateTime.parse(dateTimeString, formatter)
         } catch (_: Exception) {
             null
         }

@@ -78,6 +78,7 @@ class GoalViewModel @Inject constructor(
         }
     }
 
+
     fun updateGoal(oldGoal: GoalModel, name: String, target: Double, date: String) {
         viewModelScope.launch {
             try {
