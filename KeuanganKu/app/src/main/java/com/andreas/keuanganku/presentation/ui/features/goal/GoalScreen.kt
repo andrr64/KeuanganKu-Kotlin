@@ -37,8 +37,8 @@ import com.andreas.keuanganku.presentation.viewmodel.UiEvent
 fun GoalScreen(
     isDarkTheme: Boolean,
     onThemeChange: () -> Unit,
+    viewModel: GoalViewModel
 ) {
-    val viewModel: GoalViewModel = hiltViewModel()
     val goals by viewModel.goals.collectAsState()
 
     var showAddGoalDialog by rememberSaveable { mutableStateOf(false) }

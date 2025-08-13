@@ -17,6 +17,8 @@ import com.andreas.keuanganku.presentation.ui.features.goal.GoalScreen
 import com.andreas.keuanganku.presentation.ui.features.home.HomeScreen
 import com.andreas.keuanganku.presentation.ui.features.transaction.TransactionScreen
 import com.andreas.keuanganku.presentation.ui.navigation.BottomNavItem
+import com.andreas.keuanganku.presentation.viewmodel.GoalViewModel
+import com.andreas.keuanganku.presentation.viewmodel.TransactionViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 
@@ -24,7 +26,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(
     isDarkTheme: Boolean,
-    navController: NavController
+    navController: NavController,
+    transactionViewModel: TransactionViewModel,
+    goalViewModel: GoalViewModel
 ) {
     val systemUiController = rememberSystemUiController()
 
@@ -68,11 +72,7 @@ fun MainScreen(
             pageSize = PageSize.Fill,
             state = pagerState,
             modifier = Modifier
-                .padding(
-//                    top = innerPadding.calculateTopPadding(),
-//                    bottom = 80.dp
-                    innerPadding
-                )
+                .padding(innerPadding)
         ) { page ->
             when (pages[page]) {
                 BottomNavItem.Home -> HomeScreen(
@@ -82,12 +82,14 @@ fun MainScreen(
 
                 BottomNavItem.Goal -> GoalScreen(
                     isDarkTheme = isDarkTheme,
-                    onThemeChange = { }
+                    onThemeChange = { },
+                    viewModel = goalViewModel
                 )
 
                 BottomNavItem.Transaction -> TransactionScreen(
                     isDarkTheme = isDarkTheme,
-                    navController = navController
+                    navController = navController,
+                    viewModel = transactionViewModel
                 )
             }
         }

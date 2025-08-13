@@ -1,5 +1,6 @@
 package com.andreas.keuanganku.presentation.ui.features.transaction
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,17 +27,20 @@ import com.andreas.keuanganku.presentation.ui.component.ExpandableFabMenu
 import com.andreas.keuanganku.presentation.ui.component.FabOption
 import com.andreas.keuanganku.presentation.ui.component.HeaderWithSearch
 import com.andreas.keuanganku.presentation.ui.modal.ModalAddCategory
+import com.andreas.keuanganku.presentation.ui.modal.ModalAddTransaction
 import com.andreas.keuanganku.presentation.viewmodel.TransactionViewModel
 import com.andreas.keuanganku.presentation.viewmodel.UiEvent
 
 @Composable
 fun TransactionScreen(
     isDarkTheme: Boolean,
-    navController: NavController
+    navController: NavController,
+    viewModel: TransactionViewModel
 ) {
     var searchKeyword by remember { mutableStateOf("") }
-    var showModal by remember { mutableStateOf(false) }
-    val viewModel: TransactionViewModel = hiltViewModel()
+    var showModalAddCategory by remember { mutableStateOf(false) }
+    var showModalAddTransaction by remember { mutableStateOf(false) }
+
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
@@ -47,18 +51,22 @@ fun TransactionScreen(
         }
     }
 
-    // Definisikan opsi FAB
     val fabOptions = listOf(
         FabOption(
             text = "Add Transaction",
             icon = { Icon(Icons.Default.AccountCircle, null) },
-            onClick = {}
+            onClick = {
+                navController.currentBackStackEntry
+                    ?.savedStateHandle
+                    ?.set("transaction_data", "myTransactionObject")
+                navController.navigate("add_transaction")
+            }
         ),
         FabOption(
             text = "Add Category",
             icon = { Icon(Icons.Default.Menu, null) },
             onClick = {
-                showModal = true
+                showModalAddCategory = true
             }
         )
     )
@@ -89,12 +97,21 @@ fun TransactionScreen(
 
         }
 
-        if (showModal) {
+        if (showModalAddCategory) {
             ModalAddCategory(
-                onDismiss = { showModal = false },
+                onDismiss = { showModalAddCategory = false },
                 onSave = { name, type, color ->
                     viewModel.addCategory(name, type, color)
-                    showModal = false
+                    showModalAddCategory = false
+                }
+            )
+        }
+
+        if (showModalAddTransaction){
+            ModalAddTransaction(
+                onDismiss = {showModalAddTransaction = false},
+                onSave = { name, price, datetime, categoryId ->
+
                 }
             )
         }

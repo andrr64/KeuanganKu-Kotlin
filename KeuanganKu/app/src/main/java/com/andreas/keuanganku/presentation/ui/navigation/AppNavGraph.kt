@@ -1,27 +1,43 @@
 package com.andreas.keuanganku.presentation.ui.navigation
 
-import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.andreas.keuanganku.presentation.ui.MainScreen
+import com.andreas.keuanganku.presentation.ui.features.transaction.AddTransactionScreen
+import com.andreas.keuanganku.presentation.viewmodel.GoalViewModel
+import com.andreas.keuanganku.presentation.viewmodel.TransactionViewModel
 
 
 @Composable
 fun AppNavGraph(navController: NavHostController, isDarkTheme: Boolean) {
+    val transactionViewModel: TransactionViewModel = hiltViewModel()
+    val goalViewModel: GoalViewModel = hiltViewModel()
+
     NavHost(
         navController = navController,
         startDestination = "main"
     ) {
         composable(
-            route = "main",
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Up) },
-            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Up) },
-            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Down) },
-            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Down) }
+            route = "main"
         ) {
-            MainScreen(isDarkTheme, navController)
+            MainScreen(
+                isDarkTheme,
+                navController,
+                transactionViewModel = transactionViewModel,
+                goalViewModel = goalViewModel
+            )
+        }
+
+        composable(
+            route= "add_transaction"
+        ) {
+            AddTransactionScreen(
+                navController = navController,
+                viewModel = transactionViewModel
+            )
         }
     }
 }
